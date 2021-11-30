@@ -6,14 +6,12 @@
   position: relative;
   .country{
     display: inline-block;
-    transition: top;
-    transition-delay: 1s;
     padding: 5px 20px;
     position: absolute;
     color: white;
     width:160px;
     text-align: right;
-    transition-duration: 1s;
+    transition: all 1s ease-in-out ;
     box-sizing: border-box;
     background: linear-gradient(77deg, rgba(215,39,191,1) 0%, rgba(178,15,111,1) 13%, rgba(166,7,87,1) 36%, rgba(134,0,67,1) 73%);
 
