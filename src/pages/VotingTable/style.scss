@@ -1,3 +1,50 @@
+@mixin keyframes($animation-name) {
+  @-webkit-keyframes #{$animation-name} {
+    @content;
+  }
+  @-moz-keyframes #{$animation-name} {
+    @content;
+  }
+  @-ms-keyframes #{$animation-name} {
+    @content;
+  }
+  @-o-keyframes #{$animation-name} {
+    @content;
+  }
+  @keyframes #{$animation-name} {
+    @content;
+  }
+}
+
+@mixin animation($str) {
+  -webkit-animation: #{$str};
+  -moz-animation: #{$str};
+  -ms-animation: #{$str};
+  -o-animation: #{$str};
+  animation: #{$str};
+}
+
+@include keyframes(slide-down) {
+  0% {
+    background-position: 0% 50%;
+  }
+  25%{
+    background-position: 70% 50%;
+  }
+  45%{
+    background-position: 100% 50%;
+  }
+  60%{
+    background-position: 80% 50%;
+  }
+  75%{
+    background-position: 40% 50%;
+  }
+  90% {
+    background-position: 0% 70%;
+  }
+}
+
 .board {
   width: 400px;
   border: 1px solid dimgray;
@@ -13,7 +60,27 @@
     text-align: right;
     transition: all 1s ease-in-out ;
     box-sizing: border-box;
-    background: linear-gradient(77deg, rgba(215,39,191,1) 0%, rgba(178,15,111,1) 13%, rgba(166,7,87,1) 36%, rgba(134,0,67,1) 73%);
+    background: linear-gradient(-45deg, #ff0550, #ff1892, #af005e, #5a002d);
+    background-size: 400% 400%;
+    @include animation('slide-down 4s infinite');
 
+  }
+  .selected-country {
+    animation: gradientBG 1s ease infinite;
+    background: linear-gradient(-45deg, #ff0550, #2605ff, #05ff8a, #00f700);
+    background-size: 400% 400%;
+    @include animation('slide-down 2s infinite');
+    color: black;
+  }
+  @keyframes gradientBG {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
   }
 }

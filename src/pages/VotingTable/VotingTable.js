@@ -1,13 +1,13 @@
 import { Button, Table } from 'react-bootstrap';
 import './style.scss'
 import {useEffect, useState} from "react";
-
+import transitionSound from './../../sounds/points_go.wav'
 function VotingTable() {
 
     let cs = [
         {
             name: "Albania",
-            half: "first",
+            id: "ab",
             points: 12,
             position: {
                 top: 0,
@@ -16,7 +16,7 @@ function VotingTable() {
         },
         {
             name: "Germany",
-            half: "first",
+            id: "gm",
             points: 11,
             position: {
                 top: 0,
@@ -25,17 +25,16 @@ function VotingTable() {
         },
         {
             name: "Sweden",
-            half: "first",
+            id:"sw",
             points: 4,
             position: {
                 top: 0,
                 left: 0
             }
         },
-
         {
             name: "Armenia",
-            half: "second",
+            id: "am",
             points: 4,
             position: {
                 top: 0,
@@ -44,7 +43,7 @@ function VotingTable() {
         },
         {
             name: "Greece",
-            half: "second",
+            id:"grc",
             points: 1,
             position: {
                 top: 0,
@@ -53,8 +52,8 @@ function VotingTable() {
         },
         {
             name: "Georgia",
-            half: "first",
-            points: 5,
+            id: "gr",
+            points: 17,
             position: {
                 top: 0,
                 left: 0
@@ -62,7 +61,7 @@ function VotingTable() {
         },
         {
             name: "Italy",
-            half: "second",
+            id: "it",
             points: 1,
             position: {
                 top: 0,
@@ -73,8 +72,11 @@ function VotingTable() {
 
 
     const [haLfSize, setHalfSize] = useState(0)
-    const [countries, setCountries] = useState(cs)
+    const [countries, setCountries] = useState([])
     const [divHeightSize, setDivHeightSize] = useState(0)
+    const [sortedCountrties, setSortedCountries] = useState([])
+    const [secondHalfLeft, setSecondHalfLeft] = useState(0)
+    const [selectedCountry, setSelectedCountry] = useState(false)
 
     useEffect(()=>{
 
@@ -83,6 +85,7 @@ function VotingTable() {
 
 
     function compare(a, b) {
+        console.log(a.points > b.points);
         if (
             a.hasOwnProperty("points") &&
             b.hasOwnProperty("points") &&
@@ -102,48 +105,54 @@ function VotingTable() {
 
     useEffect(()=>{
         setTimeout(()=>{
-            let countriesCopy = [...countries]
-            let am = document.getElementById('Armenia').getBoundingClientRect()
-            console.log("am=",am);
+            let countriesCopy = [...cs]
+            let sortedArray = []
+            countriesCopy.forEach(country => {
+                sortedArray.push({...country})
+            })
+            // let am = document.getElementById('Armenia').getBoundingClientRect()
+            // console.log("am=",am);
+            let am = {
+                height : 30,
+                width:200
+            }
             let divHeight = am.height
+            // let divHeight = 30
             setDivHeightSize(divHeight)
-            let halfSizeNumber = Math.ceil(countries.length/2);
-            console.log("halsize",halfSizeNumber);
+            let halfSizeNumber = Math.ceil(countriesCopy.length/2);
             setHalfSize(halfSizeNumber)
-            let sortedArray = countriesCopy.sort(compare)
-            console.log("sorted",sortedArray);
+            sortedArray = sortedArray.sort(compare)
+            setSortedCountries(sortedArray)
+
             let topFirstHalf = 0
             let leftFirstHalf = 0
 
             let topSecondHalf = 0
             let leftSecondHalf = am.width + 30
+            setSecondHalfLeft(leftSecondHalf)
 
-            for (let i = 0 ; i<sortedArray.length/2 ; i++) {
+            for (let i = 0 ; i < sortedArray.length ; i++) {
                 let c = sortedArray[i]
-
-                c.position = {
-                    top: topFirstHalf,
-                    left:leftFirstHalf
+                let pos = {}
+                if (i < halfSizeNumber) {
+                   pos = {
+                        top: topFirstHalf,
+                        left:leftFirstHalf
+                    }
+                    topFirstHalf += divHeight
+                } else {
+                   pos = {
+                        top: topSecondHalf,
+                        left:leftSecondHalf
+                    }
+                    topSecondHalf += divHeight
                 }
-                console.log("c=",c);
-                let cIndex = countriesCopy.findIndex(ct => ct.name ===c.name)
-                countriesCopy[cIndex].position = {...c.position}
+                c.position = pos
 
-                topFirstHalf +=divHeight
+                let indexInOriginal = countriesCopy.findIndex(ct => ct.id === c.id)
+                countriesCopy[indexInOriginal].position = {...c.position}
             }
-            for (let i = Math.ceil(countries.length/2) ; i<sortedArray.length ; i++) {
-                let c = sortedArray[i]
-                c.position = {
-                    top: topSecondHalf,
-                    left:leftSecondHalf
-                }
-                console.log("c=",c);
-                let cIndex = countriesCopy.findIndex(ct => ct.name ===c.name)
-                countriesCopy[cIndex].position = {...c.position}
-
-                topSecondHalf +=divHeight
-            }
-            console.log(111,countriesCopy);
+            setSortedCountries(sortedArray)
             setCountries(countriesCopy)
 
         },2000)
@@ -151,174 +160,94 @@ function VotingTable() {
 
 
     function goTo(countryName, points) {
-        let countriesCopy = [...countries]
-        // in same half
-        // from one to another
-        let sortedArray = [...countriesCopy.sort(compare)]
-        console.log("start============",sortedArray);
-        let start = 0
-        let end = 0
-        let index = sortedArray.findIndex(c => c.name === countryName)
-        let indexInOriginalSelected = countriesCopy.findIndex(co => co.name === countryName)
-    let half = ""
+let sound = new Audio(transitionSound)
+        sound.play();
+        console.log("sound===",sound);
 
-        if (index<=(sortedArray.length-1)/2 ) {
-            half = "first"
-            start = 0
-            end = (sortedArray.length-1)/2
-        } else {
-            half = "second"
-            start = Math.ceil(sortedArray.length/2)
-            end = sortedArray.length
-        }
+        let countriesCopy  = [...countries]
+        let sortedCountriesData = [...sortedCountrties]
+        let indexInSorted = sortedCountriesData.findIndex(c => c.name === countryName)
+        let selectedCountry = {...sortedCountriesData[indexInSorted], position: {...sortedCountriesData[indexInSorted].position}}
+        setSelectedCountry(selectedCountry.id)
+        setTimeout(()=>{
+            console.log("timeout ----")
+            setSelectedCountry(false)
+        },1000)
 
-        let newCountry = {...sortedArray[index]}
-        newCountry.points += points
+        setTimeout(()=>{
+            // some half
 
-        let destinationIndex =sortedArray.findIndex(c => c.points <= newCountry.points)
-        console.log("destination index ===",destinationIndex);
+            selectedCountry.points += points
+            let destinationIndex = sortedCountriesData.findIndex(c => c.points <= selectedCountry.points)
+            sortedCountriesData[indexInSorted].points = selectedCountry.points
+            sortedCountriesData[indexInSorted].position = {...sortedCountriesData[destinationIndex].position}
 
 
-        console.log("checkcccccc", half === "first" , destinationIndex , Math.ceil((sortedArray.length-1)/2))
-        // some half
-        console.log(destinationIndex);
-        if (sortedArray[destinationIndex].name === countryName ) {
-            let indexInOriginal = countriesCopy.findIndex(co => co.name === countryName)
-console.log("kkkkkkk", countriesCopy[indexInOriginal].points , points)
 
-             countriesCopy[indexInOriginal].points += points
-            setCountries(countriesCopy)
-            return
 
-        }
-        if (destinationIndex!== -1 && half && ((half === "first" && destinationIndex <= Math.ceil((sortedArray.length-1)/2)) ||
-            (half === "second" && destinationIndex >= Math.ceil((sortedArray.length-1)/2 )) )) {
-            console.log("same half")
-            for (let i = start ; i<end ; i++) {
-                let c = sortedArray[i]
-                let indexInOriginal = countriesCopy.findIndex(co => co.name === c.name)
-                console.log("points",c.points);
-                if (c.points<= newCountry.points) {
-                    start = i
-                    newCountry.position = {
-                        top: c.position.top,
-                        left: c.position.left
-                    }
-                    countriesCopy[indexInOriginalSelected] = {...newCountry}
-                    break
-                }
+
+
+            if (destinationIndex === indexInSorted  ) {
+                // NO POSITION MOVEMENT // ONLY VALUE
+                let indexInOriginal = countriesCopy.findIndex(co => co.name === countryName)
+                countriesCopy[indexInOriginal].points += points
+                setCountries(countriesCopy)
+                setSortedCountries(sortedCountriesData)
+                return
             }
-            console.log("interval",start + 1, end );
-            for (let i = start ; i<end-1 ; i++) {
-                let c = sortedArray[i]
-                let indexInOriginal = countriesCopy.findIndex(co => co.name === c.name)
-
-                if (c.name !== countryName) {
-                    console.log("points***********", c.points);
-                    let newPosition = {
-                        top: c.position.top + divHeightSize,
-                        left: c.position.left
-                    }
-                    countriesCopy[indexInOriginal] = {...countriesCopy[indexInOriginal], position: newPosition}
-
-                }
-            }
-        }else {
-            console.log("from one to another")
-            let c = {...sortedArray[destinationIndex]}
-            console.log("C=====",c.position);
-            start = destinationIndex
-            newCountry.position = {
-               top: c.position.top,
-               left: c.position.left
-            }
-            console.log(333,newCountry, indexInOriginalSelected);
-            countriesCopy[indexInOriginalSelected] = {...newCountry}
-            end = Math.ceil((sortedArray.length-1)/2)
-            console.log("interval",start + 1, end );
-            for (let i = start ; i< end ; i++) {
-                let c = {...sortedArray[i]}
-                let indexInOriginal = countriesCopy.findIndex(co => co.name === c.name)
-
-                if (c.name !== countryName) {
-                    console.log("points***********", c.points);
-                    let newPosition = {
-                        top: c.position.top + divHeightSize,
-                        left: c.position.left
-                    }
-                    countriesCopy[indexInOriginal] = {...countriesCopy[indexInOriginal], position: newPosition}
-
+            sortedCountriesData = sortedCountriesData.sort(compare)
+            let topSizeFirst = 0
+            let topSizeSecond = 0
+            let leftSizeFirst = 0
+            let leftSizeSecond = secondHalfLeft
+            for (let i = 0 ; i < sortedCountriesData.length ; i++) {
+                let c = sortedCountriesData[i]
+                c.position = {}
+                if(i<=Math.floor(sortedCountriesData.length/2)) {
+                    c.position.top = topSizeFirst
+                    c.position.left = leftSizeFirst
+                    topSizeFirst+=30
+                }else {
+                    c.position.top = topSizeSecond
+                    c.position.left = leftSizeSecond
+                    topSizeSecond += 30
                 }
             }
 
-            let cc = {...sortedArray[end]}
-            console.log(cc, countriesCopy);
-            console.log("???????????",sortedArray);
-            let indexInOriginalCC = countriesCopy.findIndex(co => co.name === cc.name)
-            let newPosition = {
-                top: sortedArray[end+1].position.top,
-                left: sortedArray[end+1].position.left
-            }
-            countriesCopy[indexInOriginalCC] = {...countriesCopy[indexInOriginalCC], position: newPosition}
-            console.log("sssssssssss",sortedArray);
-
-           let sortedArray2 = [...sortedArray]
-            sortedArray2 = sortedArray2.sort(compare)
-            for (let i = Math.ceil((sortedArray2.length-1)/2)+1; i< sortedArray2.length ; i++) {
-
-                if (sortedArray2[i].name !== countryName) {
-                    let c = sortedArray2[i]
-
-                    console.log("gggggggg", c.name , countryName)
-
-                    let indexInOriginal = countriesCopy.findIndex(co => co.name === c.name)
-
-
-                    console.log("points***********", c.points);
-                    let newPosition = {
-                        top: c.position.top + divHeightSize,
-                        left: c.position.left
-                    }
-                    console.log("bug",newPosition);
-                    countriesCopy[indexInOriginal] = {...countriesCopy[indexInOriginal], position: newPosition}
-                }
+            let newData = []
+            countriesCopy.forEach(itm => {
+                let c = sortedCountriesData.find(cItem => cItem.name === itm.name)
+                newData.push({...c})
+            })
+            setCountries([...newData])
+            setSortedCountries(sortedCountriesData)
+        },1000)
 
 
 
-            }
-
-
-
-
-
-        }
-
-        ///different halfs
-
-
-
-
-        console.log("news",countriesCopy);
-
-         setCountries(countriesCopy)
     }
 
 
     return (
         <div className={'mt-5 w-75  mx-auto'}>
             <h1>Voting table {haLfSize} | {haLfSize}</h1>
+            <h1 onClick={() => goTo("Albania", 12)}>12 to Albania</h1>
+            <h1 onClick={() => goTo("Sweden", 12)}>12 to Sweden</h1>
+            <h1 onClick={() => goTo("Germany", 12)}>12 to Germany</h1>
             <h1 onClick={() => goTo("Italy", 12)}>12 to Italy</h1>
             <h1 onClick={() => goTo("Armenia", 12)}>12 to Armenia</h1>
             <h1 onClick={() => goTo("Greece", 12)}>12 to Greece</h1>
             <h1 onClick={() => goTo("Georgia", 12)}>12 to Georgia</h1>
+
             <div className={"board"}>
-                {countries.map(c => (
+                {countries.map((c) => (
                     <div
                         style={{
                             top: `${c.position.top}px`,
-                            left: `${c.position.left}px`
+                            left: `${c.position.left}px`,
+                            border: (selectedCountry && selectedCountry === c.id) && '2px solid black !important'
                         }}
-                        className={"country"} id={c.name} key={c.name}>{c.points} ___ {c.name}</div>
+                        className={"country " + (selectedCountry && selectedCountry === c.id ? "selected-country" : '')} id={c.name} key={c.name}> __ {c.points}_{c.name}</div>
                 ))}
             </div>
         </div>
