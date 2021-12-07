@@ -2,7 +2,24 @@ import { Button, Table } from 'react-bootstrap';
 import './style.scss'
 import {useEffect, useState} from "react";
 import transitionSound from './../../sounds/points_go.wav'
+import {Row} from 'react-bootstrap'
 function VotingTable() {
+
+
+    let pointsData = [
+        {
+            value:12,
+            id:'high'
+        },
+        {
+            value:10,
+            id : "middle"
+        },
+        {
+            value:8,
+            id: "small"
+        }
+    ]
 
     let cs = [
         {
@@ -77,6 +94,7 @@ function VotingTable() {
     const [sortedCountrties, setSortedCountries] = useState([])
     const [secondHalfLeft, setSecondHalfLeft] = useState(0)
     const [selectedCountry, setSelectedCountry] = useState(false)
+    const [pointsPositions, setPointsPositions] = useState(false)
 
     useEffect(()=>{
 
@@ -105,17 +123,28 @@ function VotingTable() {
 
     useEffect(()=>{
         setTimeout(()=>{
+
             let countriesCopy = [...cs]
             let sortedArray = []
             countriesCopy.forEach(country => {
                 sortedArray.push({...country})
             })
-            // let am = document.getElementById('Armenia').getBoundingClientRect()
-            // console.log("am=",am);
-            let am = {
+            let board = document.getElementById('board').getBoundingClientRect()
+          // board.bottom board.left
+            let pointsLeft = board.left + board.width/3
+                let am = {
                 height : 30,
                 width:200
             }
+            let margin = 0
+            pointsData = pointsData.map(p => {
+                margin += 30
+                return {...p, top: board.bottom, left: pointsLeft + margin}
+
+            })
+            console.log(pointsData);
+            setPointsPositions(pointsData)
+
             let divHeight = am.height
             // let divHeight = 30
             setDivHeightSize(divHeight)
@@ -160,9 +189,21 @@ function VotingTable() {
 
 
     function goTo(countryName, points) {
+        let pointsPositionsCopy = [...pointsPositions]
 let sound = new Audio(transitionSound)
         sound.play();
         console.log("sound===",sound);
+
+        let am = document.getElementById(countryName).getBoundingClientRect()
+
+        let selectedPointIndex  = pointsPositionsCopy.findIndex(pt => pt.id === "high")
+        pointsPositionsCopy[selectedPointIndex] = { ...pointsPositionsCopy[selectedPointIndex],
+            top:am.top + 8,
+            left:am.left
+        }
+        console.log("bug2",pointsPositionsCopy);
+        setPointsPositions(pointsPositionsCopy)
+
 
         let countriesCopy  = [...countries]
         let sortedCountriesData = [...sortedCountrties]
@@ -179,10 +220,19 @@ let sound = new Audio(transitionSound)
 
             selectedCountry.points += points
             let destinationIndex = sortedCountriesData.findIndex(c => c.points <= selectedCountry.points)
+            let item = sortedCountriesData.find(c => c.points <= selectedCountry.points)
             sortedCountriesData[indexInSorted].points = selectedCountry.points
             sortedCountriesData[indexInSorted].position = {...sortedCountriesData[destinationIndex].position}
 
+            am = document.getElementById(item.name).getBoundingClientRect()
 
+            let selectedPointIndex  = pointsPositionsCopy.findIndex(pt => pt.id === "high")
+            pointsPositionsCopy[selectedPointIndex] = { ...pointsPositionsCopy[selectedPointIndex],
+                top:am.top + 8,
+                left:am.left
+            }
+            console.log("bug",pointsPositionsCopy);
+            setPointsPositions(pointsPositionsCopy)
 
 
 
@@ -217,6 +267,9 @@ let sound = new Audio(transitionSound)
             let newData = []
             countriesCopy.forEach(itm => {
                 let c = sortedCountriesData.find(cItem => cItem.name === itm.name)
+                if (c.name === countryName) {
+
+                }
                 newData.push({...c})
             })
             setCountries([...newData])
@@ -229,28 +282,48 @@ let sound = new Audio(transitionSound)
 
 
     return (
-        <div className={'mt-5 w-75  mx-auto'}>
-            <h1>Voting table {haLfSize} | {haLfSize}</h1>
-            <h1 onClick={() => goTo("Albania", 12)}>12 to Albania</h1>
-            <h1 onClick={() => goTo("Sweden", 12)}>12 to Sweden</h1>
-            <h1 onClick={() => goTo("Germany", 12)}>12 to Germany</h1>
-            <h1 onClick={() => goTo("Italy", 12)}>12 to Italy</h1>
-            <h1 onClick={() => goTo("Armenia", 12)}>12 to Armenia</h1>
-            <h1 onClick={() => goTo("Greece", 12)}>12 to Greece</h1>
-            <h1 onClick={() => goTo("Georgia", 12)}>12 to Georgia</h1>
+        <div className={'main-page-voting'}>
+            <div className={'main-page-voting-templete position-relative'}>
+                {/*<h1>Voting table {haLfSize} | {haLfSize}</h1>*/}
+                {/*<h1 onClick={() => goTo("Albania", 12)}>12 to Albania</h1>*/}
+                {/*<h1 onClick={() => goTo("Sweden", 12)}>12 to Sweden</h1>*/}
+                {/*<h1 onClick={() => goTo("Germany", 12)}>12 to Germany</h1>*/}
+                {/*<h1 onClick={() => goTo("Italy", 12)}>12 to Italy</h1>*/}
+                {/*<h1 onClick={() => goTo("Armenia", 12)}>12 to Armenia</h1>*/}
+                {/*<h1 onClick={() => goTo("Greece", 12)}>12 to Greece</h1>*/}
+                {/*<h1 onClick={() => goTo("Georgia", 12)}>12 to Georgia</h1>*/}
 
-            <div className={"board"}>
-                {countries.map((c) => (
-                    <div
-                        style={{
-                            top: `${c.position.top}px`,
-                            left: `${c.position.left}px`,
-                            border: (selectedCountry && selectedCountry === c.id) && '2px solid black !important'
-                        }}
-                        className={"country " + (selectedCountry && selectedCountry === c.id ? "selected-country" : '')} id={c.name} key={c.name}> __ {c.points}_{c.name}</div>
-                ))}
+                <div className={"board mx-auto"} id={"board"}>
+                    {countries.map((c) => (
+                        <div
+                            style={{
+                                top: `${c.position.top}px`,
+                                left: `${c.position.left}px`,
+                                border: (selectedCountry && selectedCountry === c.id) && '2px solid black !important'
+                            }}
+                            className={"position-absolute country " + (selectedCountry && selectedCountry === c.id ? "selected-country" : '')} id={c.name} key={c.name}> __ {c.points}_{c.name}</div>
+                    ))}
+
+                </div>
+                <Row className="points justify-content-center">
+
+                    {pointsData.map(p => (
+                        <div className={'mr-2'}>
+                            <div onClick={() => goTo("Italy", 12)}
+                                style={{top:pointsPositions.length && pointsPositions.find(pnt => pnt.id === p.id) && pointsPositions.find(pnt => pnt.id === p.id).top || '0',
+                                    left:pointsPositions.length && pointsPositions.find(pnt => pnt.id === p.id) && pointsPositions.find(pnt => pnt.id === p.id).left || '0',
+                                }}
+                                 className={"point display-flex d-flex justify-content-center align-items-center position-absolute" } >{p.value}</div>
+                        </div>
+                    ))}
+
+
+
+                </Row>
+
             </div>
         </div>
+
     );
 }
 

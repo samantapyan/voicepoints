@@ -44,43 +44,67 @@
     background-position: 0% 70%;
   }
 }
+.main-page-voting{
+  background:linear-gradient(-45deg, #06013e, #05112f, #0c0079, #0a0063, #5d0569, #b300bd);
+  padding-top: 0 !important;
+  background-size: 100%;
+  &-templete {
+    padding-top:50px ;
+    .points {
+      background: #0a0063;
+      .point{
+        transition: all 1s ease-in-out ;
+        width: 25px;
+        padding: 10px;
+        height: 25px;
+        border-radius: 50px;
+        background: white;
+        font-weight: bold;
+        color: #040034;
+      }
+    }
+    .board {
+      margin-top: 100px;
+      width: 400px;
+      //border: 1px solid dimgray;
+      padding: 5px;
+box-shadow: 2px -2px 41px 13px #00000096;
+      height: 200px;
+      position: relative;
 
-.board {
-  width: 400px;
-  border: 1px solid dimgray;
-  margin-left: 50px;
-  height: 200px;
-  position: relative;
-  .country{
-    display: inline-block;
-    padding: 5px 20px;
-    position: absolute;
-    color: white;
-    width:160px;
-    text-align: right;
-    transition: all 1s ease-in-out ;
-    box-sizing: border-box;
-    background: linear-gradient(-45deg, #ff0550, #ff1892, #af005e, #5a002d);
-    background-size: 400% 400%;
-    @include animation('slide-down 4s infinite');
+      .country{
+        display: inline-block;
+        padding: 5px 20px;
+        color: white;
+        width:160px;
+        text-align: right;
+        transition: all 1s ease-in-out ;
+        box-sizing: border-box;
+        background: linear-gradient(-45deg, #ff0550, #ff1892, #af005e, #5a002d);
+        background-size: 400% 400%;
+        @include animation('slide-down 4s infinite');
 
-  }
-  .selected-country {
-    animation: gradientBG 1s ease infinite;
-    background: linear-gradient(-45deg, #ff0550, #2605ff, #05ff8a, #00f700);
-    background-size: 400% 400%;
-    @include animation('slide-down 2s infinite');
-    color: black;
-  }
-  @keyframes gradientBG {
-    0% {
-      background-position: 0% 50%;
+      }
+      .selected-country {
+        animation: gradientBG 1s ease infinite;
+        background: linear-gradient(-45deg, #ff0550, #2605ff, #05ff8a, #00f700);
+        background-size: 400% 400%;
+        @include animation('slide-down 2s infinite');
+        color: black;
+      }
+      @keyframes gradientBG {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
     }
-    50% {
-      background-position: 100% 50%;
-    }
-    100% {
-      background-position: 0% 50%;
-    }
   }
+
 }
+
