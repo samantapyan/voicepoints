@@ -50,19 +50,7 @@
   background-size: 100%;
   &-templete {
     padding-top:50px ;
-    .points {
-      background: #0a0063;
-      .point{
-        transition: all 1s ease-in-out ;
-        width: 25px;
-        padding: 10px;
-        height: 25px;
-        border-radius: 50px;
-        background: white;
-        font-weight: bold;
-        color: #040034;
-      }
-    }
+
     .board {
       margin-top: 100px;
       width: 400px;
@@ -72,13 +60,26 @@ box-shadow: 2px -2px 41px 13px #00000096;
       height: 200px;
       position: relative;
 
+
+        .point{
+          transition: all 0.8s ease-in-out ;
+          width: 25px;
+          padding: 10px;
+          height: 25px;
+          border-radius: 50px;
+          background: white;
+          font-weight: bold;
+          color: #040034;
+        }
+
       .country{
         display: inline-block;
         padding: 5px 20px;
         color: white;
         width:160px;
+        height: 28px;
         text-align: right;
-        transition: all 1s ease-in-out ;
+        transition: all 0.8s ease-in-out ;
         box-sizing: border-box;
         background: linear-gradient(-45deg, #ff0550, #ff1892, #af005e, #5a002d);
         background-size: 400% 400%;

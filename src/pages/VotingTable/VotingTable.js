@@ -139,7 +139,7 @@ function VotingTable() {
             let margin = 0
             pointsData = pointsData.map(p => {
                 margin += 30
-                return {...p, top: board.bottom, left: pointsLeft + margin}
+                return {...p, top: board.height, left: board.width/3 + margin}
 
             })
             console.log(pointsData);
@@ -188,20 +188,61 @@ function VotingTable() {
     },[])
 
 
-    function goTo(countryName, points) {
-        let pointsPositionsCopy = [...pointsPositions]
+ function pointsGive(name, p, type,positions){
+    console.log("*********",type);
+        return new Promise((resolve, reject) => {
+            setTimeout( async ()=>{
+               let pGrop  = await goTo(name, p, type,positions)
+                resolve(pGrop)
+            },2000)
+        })
+}
+
+    async function startVoting(){
+
+
+        let countries = ["Armenia", "Albania", "Italy", "Greece",  "Georgia", "Germany"]
+            let groupPoinst = ["small", "middle", "high"]
+      let p = 8
+        let positions = [...pointsPositions]
+        for (let i = 0; i<3; i++) {
+            let random_number = Math.floor(Math.random() * (countries.length-1));
+            console.log("Random number",random_number,countries.length-1, countries);
+            countries = countries.filter(i => i!== countries[random_number])
+
+            console.log("///",groupPoinst[i]);
+            let l = await pointsGive(countries[random_number],p,groupPoinst[i],positions)
+            console.log("why",l);
+            positions = [...l]
+            p+=2
+        }
+    }
+
+
+    async function goTo(countryName, points, type, pgroup) {
+        return new Promise((resolve, reject)=>{
+
+
+
+
+        console.log("params===", countryName, points, type, pgroup);
+        let pointsPositionsCopy = [...pgroup]
 let sound = new Audio(transitionSound)
         sound.play();
         console.log("sound===",sound);
 
-        let am = document.getElementById(countryName).getBoundingClientRect()
+        let board = document.getElementById('board').getBoundingClientRect()
+        console.log("board========",board);
+        let countryElement = document.getElementById(countryName).getBoundingClientRect()
 
-        let selectedPointIndex  = pointsPositionsCopy.findIndex(pt => pt.id === "high")
+
+        console.log("am========",countryElement);
+        let selectedPointIndex  = pointsPositionsCopy.findIndex(pt => pt.id === type)
         pointsPositionsCopy[selectedPointIndex] = { ...pointsPositionsCopy[selectedPointIndex],
-            top:am.top + 8,
-            left:am.left
+            top: countryElement.top - board.top ,
+            left:countryElement.left - board.left
         }
-        console.log("bug2",pointsPositionsCopy);
+        console.log("bug2",board.top - countryElement.top, board.left - countryElement.left);
         setPointsPositions(pointsPositionsCopy)
 
 
@@ -210,7 +251,7 @@ let sound = new Audio(transitionSound)
         let indexInSorted = sortedCountriesData.findIndex(c => c.name === countryName)
         let selectedCountry = {...sortedCountriesData[indexInSorted], position: {...sortedCountriesData[indexInSorted].position}}
         setSelectedCountry(selectedCountry.id)
-        setTimeout(()=>{
+      setTimeout(()=>{
             console.log("timeout ----")
             setSelectedCountry(false)
         },1000)
@@ -224,14 +265,15 @@ let sound = new Audio(transitionSound)
             sortedCountriesData[indexInSorted].points = selectedCountry.points
             sortedCountriesData[indexInSorted].position = {...sortedCountriesData[destinationIndex].position}
 
-            am = document.getElementById(item.name).getBoundingClientRect()
-
-            let selectedPointIndex  = pointsPositionsCopy.findIndex(pt => pt.id === "high")
+             countryElement = document.getElementById(countryName).getBoundingClientRect()
+            board = document.getElementById('board').getBoundingClientRect()
+            let selectedPointIndex  = pointsPositionsCopy.findIndex(pt => pt.id === type)
             pointsPositionsCopy[selectedPointIndex] = { ...pointsPositionsCopy[selectedPointIndex],
-                top:am.top + 8,
-                left:am.left
+                ...sortedCountriesData[indexInSorted].position
             }
-            console.log("bug",pointsPositionsCopy);
+
+
+            console.log("bug-------------",countryElement.top - board.top ,countryElement.left - board.left, pointsPositionsCopy);
             setPointsPositions(pointsPositionsCopy)
 
 
@@ -243,7 +285,8 @@ let sound = new Audio(transitionSound)
                 countriesCopy[indexInOriginal].points += points
                 setCountries(countriesCopy)
                 setSortedCountries(sortedCountriesData)
-                return
+                console.log("???????????????????   2",pointsPositionsCopy);
+                resolve(pointsPositionsCopy)
             }
             sortedCountriesData = sortedCountriesData.sort(compare)
             let topSizeFirst = 0
@@ -274,25 +317,21 @@ let sound = new Audio(transitionSound)
             })
             setCountries([...newData])
             setSortedCountries(sortedCountriesData)
+            console.log("???????????????????",pointsPositionsCopy);
+            resolve(pointsPositionsCopy)
+
         },1000)
 
-
-
+console.log("end ----- goTo")
+    })
     }
 
 
     return (
         <div className={'main-page-voting'}>
             <div className={'main-page-voting-templete position-relative'}>
-                {/*<h1>Voting table {haLfSize} | {haLfSize}</h1>*/}
-                {/*<h1 onClick={() => goTo("Albania", 12)}>12 to Albania</h1>*/}
-                {/*<h1 onClick={() => goTo("Sweden", 12)}>12 to Sweden</h1>*/}
-                {/*<h1 onClick={() => goTo("Germany", 12)}>12 to Germany</h1>*/}
-                {/*<h1 onClick={() => goTo("Italy", 12)}>12 to Italy</h1>*/}
-                {/*<h1 onClick={() => goTo("Armenia", 12)}>12 to Armenia</h1>*/}
-                {/*<h1 onClick={() => goTo("Greece", 12)}>12 to Greece</h1>*/}
-                {/*<h1 onClick={() => goTo("Georgia", 12)}>12 to Georgia</h1>*/}
 
+<button onClick={startVoting}>start voting</button>
                 <div className={"board mx-auto"} id={"board"}>
                     {countries.map((c) => (
                         <div
@@ -303,23 +342,32 @@ let sound = new Audio(transitionSound)
                             }}
                             className={"position-absolute country " + (selectedCountry && selectedCountry === c.id ? "selected-country" : '')} id={c.name} key={c.name}> __ {c.points}_{c.name}</div>
                     ))}
-
-                </div>
-                <Row className="points justify-content-center">
-
                     {pointsData.map(p => (
                         <div className={'mr-2'}>
                             <div onClick={() => goTo("Italy", 12)}
-                                style={{top:pointsPositions.length && pointsPositions.find(pnt => pnt.id === p.id) && pointsPositions.find(pnt => pnt.id === p.id).top || '0',
-                                    left:pointsPositions.length && pointsPositions.find(pnt => pnt.id === p.id) && pointsPositions.find(pnt => pnt.id === p.id).left || '0',
-                                }}
+                                 style={{top:pointsPositions.length && pointsPositions.find(pnt => pnt.id === p.id) && pointsPositions.find(pnt => pnt.id === p.id).top || '0',
+                                     left:pointsPositions.length && pointsPositions.find(pnt => pnt.id === p.id) && pointsPositions.find(pnt => pnt.id === p.id).left || '0',
+                                 }}
                                  className={"point display-flex d-flex justify-content-center align-items-center position-absolute" } >{p.value}</div>
                         </div>
                     ))}
+                </div>
+                <Row className="points justify-content-center">
+
+
 
 
 
                 </Row>
+
+                {/*<h1>Voting table {haLfSize} | {haLfSize}</h1>*/}
+                {/*<h1 onClick={() => goTo("Albania", 12)}>12 to Albania</h1>*/}
+                {/*<h1 onClick={() => goTo("Sweden", 12)}>12 to Sweden</h1>*/}
+                {/*<h1 onClick={() => goTo("Germany", 12)}>12 to Germany</h1>*/}
+                {/*<h1 onClick={() => goTo("Italy", 12)}>12 to Italy</h1>*/}
+                {/*<h1 onClick={() => goTo("Armenia", 12)}>12 to Armenia</h1>*/}
+                {/*<h1 onClick={() => goTo("Greece", 12)}>12 to Greece</h1>*/}
+                {/*<h1 onClick={() => goTo("Georgia", 12)}>12 to Georgia</h1>*/}
 
             </div>
         </div>
