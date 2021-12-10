@@ -340,7 +340,7 @@ console.log("end ----- goTo")
                                 left: `${c.position.left}px`,
                                 border: (selectedCountry && selectedCountry === c.id) && '2px solid black !important'
                             }}
-                            className={"position-absolute country " + (selectedCountry && selectedCountry === c.id ? "selected-country" : '')} id={c.name} key={c.name}> __ {c.points}_{c.name}</div>
+                            className={"position-absolute country " + (selectedCountry && selectedCountry === c.id ? "selected-country" : '')} id={c.name} key={c.name}> __ {c.points}_{c.id}</div>
                     ))}
                     {pointsData.map(p => (
                         <div className={'mr-2'}>
