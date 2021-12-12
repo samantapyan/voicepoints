@@ -5,67 +5,134 @@ import {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import firebase from "./../../services/firebase"
 import {setUser} from "../../store/slices/UserSlice";
+import {useForm} from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
+import { useHistory, useParams } from 'react-router-dom'
+
 // import { createUserWithEmailAndPassword } from 'firebase/auth'
 // import {useAuth} from "../../contexts/AuthContext";
 // import {AuthProvider} from "./../../contexts/AuthContext";
 
 
-function Registration() {
+function Registration(props) {
+    const routeId  = useParams();
+    console.log("route =",props.match);
+    const emailRegexp  ='(?:[a-z0-9!#$%&\'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&\'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\\])'
+let schema = null
+    console.log("pathName=", window.location.pathname);
+    if (window.location.pathname.includes( "registration")) {
+       schema = yup.object().shape({
+           firstName: yup.string().required(),
+           password: yup.string().required(),
+           passwordAgain: yup.string().required(),
+           email: yup.string().required().matches(emailRegexp, "Invalid Email"),
+           lastName: yup.string().required(),
+           country: yup.string().required()
+       })
+   } else {
+       schema = yup.object().shape({
+           password: yup.string().required(),
+           email: yup.string().required().matches(emailRegexp, "Invalid Email")
+       })
+   }
+
+
+    const { register,resetField, handleSubmit, setValue, reset, formState: { errors } } = useForm({
+        resolver: yupResolver(schema)});
+
+    const [userLocal, setUserLocal]=useState(null)
+    const [passwordMatching, setPasswordMatching]=useState({message: '', isError:false})
+const [pageType, setPageType] = useState('')
+    const [fields, setFields] = useState([])
     const dispatch = useDispatch()
-    const user = useSelector(state => state.user)
-
-    console.log("user=", user);
-    const fields = Data.fieldsUserSignUp;
-    console.log("fields",fields);
-
-    // const {signUp} = useAuth()
+    const activeUser = useSelector(state => state.user)
 
 
     useEffect(()=>{
+        // setTimeout(()=>{
+        //     console.log("current user = ", firebase.auth.currentUser);
+        // },1000)
+  if (window.location.pathname === "/registration") {
+      setPageType("registration")
+      let fieldsSignup = Data.fieldsUserSignUp;
 
-    },[])
+      setFields(fieldsSignup)
+  } else {
+      setPageType("login")
+      let fieldsLogin = Data.fieldsUserLogin;
+      setFields(fieldsLogin)
+
+  }
 
 
 
-    function compare(a, b) {
-        if (
-            a.hasOwnProperty("points") &&
-            b.hasOwnProperty("points") &&
-            a.points > b.points
-        ) {
-            return -1;
-        }
-        if (
-            a.hasOwnProperty("points") &&
-            b.hasOwnProperty("points") &&
-            a.points < b.points
-        ) {
-            return 1;
-        }
-        return 0;
-    }
+        reset()
+    },[pageType])
+
+
+
+    console.log("errors =", errors)
 
     useEffect(()=>{
+        console.log("auth User",activeUser);
+    },[activeUser])
 
-    },[])
 
-async function handleSubmit(){
+    const onSubmit = data => {
+        console.log("SUBMIT +++")
+        const {email, password} = data
+        if (pageType === "registration") {
+            if (data.password !== data.passwordAgain) {
+                console.log("match error #1")
+                setPasswordMatching({message:"Password does not match",isError:true})
+                return false
+            }
 
-      const auth = firebase.auth
-    console.log("a=",auth);
-    let email = "testbtest909@gmail.com"
-    let password = "qaz10qaz10"
+            setPasswordMatching({message:"",isError:false})
+            console.log("data==",data);
 
-    firebase.auth.createUserWithEmailAndPassword(email, password).then(r =>{
-            console.log("reg ok", r)
+            firebase.auth.createUserWithEmailAndPassword(email, password).then(r =>{
+                console.log("reg ok all=", r)
+                console.log("reg ok uid=", r.user.uid)
 
-        dispatch(setUser({email:r.user.email}))
-        }) .catch(e => {
-            console.log("err reg = ",e)
-        })
+                dispatch(setUser({email:r.user.email}))
+                firebase.addUser({email:r.user.email, uid:r.user.uid,...data},r => {
+                    console.log("user added successfuly",r)
+                })
+                firebase.auth.signInWithEmailAndPassword(email, password).then(data =>{
+                    console.log("Sign In work", data)
+                }).catch(error => {
+                    console.log("error", error)
+                })
 
-}
+            }) .catch(e => {
+                console.log("err reg = ",e.message)
+                setPasswordMatching({message:e.message,isError:true})
+            })
 
+
+        } else {
+            console.log("Login ++")
+            firebase.auth.signInWithEmailAndPassword(email, password).then(r =>{
+                console.log("SIGN IN OK=", r)
+
+                dispatch(setUser({email:r.user.email, uid:r.user.uid }))
+
+
+
+
+            }) .catch(e => {
+                console.log("err reg = ",e.message)
+                setPasswordMatching({message:e.message,isError:true})
+            })
+        }
+        fields.forEach(field => {
+            resetField(field.key)
+        });
+        setUser(null)
+
+    };
 
 
     return (
@@ -74,60 +141,49 @@ async function handleSubmit(){
             <div className="wrapper">
                 <div className="title-text">
                     <div className="title login">
-                        Login Form
+                        {pageType === "registration" ? "Registration Form" : "Login Form"}
                     </div>
-                    <div className="title signup">
-                        Signup Form
-                    </div>
+
                 </div>
                 <div className="form-container">
-                    <div className="slide-controls">
-                        <input type="radio" name="slide" id="login" checked/>
-                        <input type="radio" name="slide" id="signup"/>
-                        <label htmlFor="signup" className="slide signup">Signup</label>
-                        <label htmlFor="login" className="slide login">Login</label>
-                        <div className="slider-tab"></div>
-                    </div>
-<button onClick={handleSubmit}>Test SIGNUP</button>
                     <div className="form-inner">
-                        <form className="signup" onSubmit={handleSubmit}>
-                            {fields.length && fields.map(field => (
+                        <form className="signup" onSubmit={handleSubmit(onSubmit)}>
+                            {fields.length && fields.map(f => (
                                 <div className="field">
-                                    <input type={field.type} placeholder={field.name} required/>
+                                    <label htmlFor={f.key}>{f.name}</label>
+                                    <input
+                                        {...register(f.key,
+                                            { required: true, maxLength: 20 }
+                                        )}
+                                        name={f.key}
+                                        type={f.type}
+                                        id={f.key}
+                                        className={'input w-100'}/>
+                                    <div className={'text-danger'}>
+                                        {errors[f.key]?.message}
+                                    </div>
                                 </div>
                             ))}
-                            <div className="field btn">
-                                <div className="btn-layer"></div>
-                                <input type="submit" value="Signup"/>
+                            <div className={'text-danger'}>
+                                {passwordMatching && passwordMatching?.isError && passwordMatching.isError === true && passwordMatching.message}
                             </div>
+
+                          <div className={'mt-4'}>
+                              <Button  type={'submit'} >
+
+                                  {pageType === "registration" ? "Register" : "Login"}
+
+                              </Button>
+
+                          </div>
+
                         </form>
-                        <form action="#" className="login">
-                            {fields.length && fields.map(field => (
-                                <div className="field">
-                                    <input type={field.type} placeholder={field.name} required/>
-                                </div>
-                            ))}
-
-
-                            <div className="pass-link">
-                                <a href="#">Forgot password?</a>
-                            </div>
-                            <div className="field btn">
-                                <div className="btn-layer"></div>
-                                <input type="submit" value="Login"/>
-                            </div>
-                            <div className="signup-link">
-                                Not a member? <a href="">Signup now</a>
-                            </div>
-                        </form>
-
                     </div>
+                    <h1>{console.log("errors")}</h1>
                 </div>
             </div>
         </div>
         </div>
-
-
     );
 }
 

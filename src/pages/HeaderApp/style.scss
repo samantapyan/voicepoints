@@ -1,0 +1,53 @@
+.home-banner{
+  &-1 {
+    background: rgb(8,0,214);
+    padding: 50px 0;
+    margin-bottom: 50px;
+    background: linear-gradient(298deg, rgb(7, 0, 159) 0%, rgba(253,29,29,1) 48%, rgb(20, 23, 180) 85%);
+    &-main-word {
+      font-size: 50px;
+      color: white;
+    }
+    &-text {
+      font-size: 40px;
+      color: white;
+    }
+  }
+  &-2, &-3 {
+    background: rgb(8,0,214);
+    padding: 50px 0;
+    margin-bottom: 50px;
+    background: linear-gradient(298deg, rgb(8, 0, 166) 0%, rgba(253,29,29,1) 48%, rgba(23,26,231,1) 85%);
+    &-main-word {
+      font-size: 40px;
+      color: white;
+    }
+    &-text {
+      font-size: 30px;
+      color: white;
+    }
+  }
+  &-3 {
+    background: rgb(8,0,214);
+    padding: 50px 0;
+    margin-bottom: 50px;
+    background: linear-gradient(298deg, rgb(7, 0, 126) 0%, rgb(18, 9, 75) 48%, rgb(22, 25, 184) 85%);
+    &-main-word {
+      font-size: 40px;
+      color: white;
+    }
+    &-text {
+      font-size: 30px;
+      color: white;
+    }
+  }
+}
+.no-link {
+  text-transform: none;
+  list-style-type: none;
+
+  &:hover {
+    color: #5695fb !important;
+    text-decoration: none;
+  }
+}

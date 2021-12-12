@@ -26,12 +26,25 @@ class FirebaseService {
         success(true);
 
     }
+    addUser = (data, callback) => {
+        console.log("---- +++ ----",this.db.collection('users'));
+        this.db
+            .collection('users')
+            .doc(data.uid)
+            .set(data)
+            .then(r => {
+                callback(r)
+            })
+    }
+    getCurrenUser = (callback) =>{
+       callback(firebase.auth().currentUser)
+    }
+
 }
 
 const Instance = new FirebaseService();
-Instance.init(()=>{
-    console.log("YEAH")
-})
+
+
 
 console.log("MAL",Instance);
 export default Instance;
