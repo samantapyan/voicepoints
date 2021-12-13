@@ -2,12 +2,13 @@ import React, {useEffect, useState, useRef} from 'react'
 import './style.scss';
 import {Link} from "react-router-dom";
 import * as ReactBootstrap from 'react-bootstrap'
-
+import {useDispatch, useSelector} from "react-redux";
 // import {Link} from 'react-router-dom'
 const Row = ReactBootstrap.Row;
 const Col = ReactBootstrap.Col;
 const Container = ReactBootstrap.Container;
 const Home = () => {
+    const activeUser = useSelector(state => state.user)
 
 
     return (
@@ -23,6 +24,12 @@ const Home = () => {
                     <span className={'home-banner-1-text'}>Be a </span>
                     <span className={'home-banner-1-main-word font-weight-bold pr-4'}> Jury</span>
                     <span className={'home-banner-1-text'}>and give your points</span>
+                    <div className={'home-banner-1-register-section'}>
+                        {activeUser && activeUser?.email && activeUser.email ? (
+                         <Link to={'votings'}>Go To Voting Page </Link>
+                        ): <Link to={'registration'}>Register and start </Link>
+                        }
+                    </div>
                 </Container>
             </div>
             <div className={'home-banner-3'}>

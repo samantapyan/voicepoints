@@ -3,7 +3,13 @@ import './style.scss'
 import {useEffect, useState} from "react";
 import transitionSound from './../../sounds/points_go.wav'
 import {Row} from 'react-bootstrap'
+import firebase from "./../../services/firebase"
+import pointBack from "./../../media/backgrounds/points-back.svg"
+import * as speech from "@tensorflow-models/speech-commands";
+import React from "react";
+
 function VotingTable() {
+    const URL = "https://teachablemachine.withgoogle.com/models/3cCfdVsTm/"
 
 
     let pointsData = [
@@ -92,14 +98,22 @@ function VotingTable() {
     const [countries, setCountries] = useState([])
     const [divHeightSize, setDivHeightSize] = useState(0)
     const [sortedCountrties, setSortedCountries] = useState([])
+    const [selectedPoint, setSelectedPoint] = useState(false)
     const [secondHalfLeft, setSecondHalfLeft] = useState(0)
     const [selectedCountry, setSelectedCountry] = useState(false)
     const [pointsPositions, setPointsPositions] = useState(false)
+    const [action, setAction] = useState(null)
 
     useEffect(()=>{
 
     },[])
 
+
+    useEffect(()=>{
+
+        console.log("action - ",action)
+
+    }, [action])
 
 
     function compare(a, b) {
@@ -122,67 +136,78 @@ function VotingTable() {
     }
 
     useEffect(()=>{
+
         setTimeout(()=>{
 
-            let countriesCopy = [...cs]
-            let sortedArray = []
-            countriesCopy.forEach(country => {
-                sortedArray.push({...country})
-            })
-            let board = document.getElementById('board').getBoundingClientRect()
-          // board.bottom board.left
-            let pointsLeft = board.left + board.width/3
+            firebase.getAllCountries((all) => {
+                console.log(all);
+                let countriesCopy = [...all]
+                let sortedArray = []
+                countriesCopy.forEach(country => {
+                    sortedArray.push({...country})
+                })
+                let board = document.getElementById('board').getBoundingClientRect()
+                // board.bottom board.left
+                let pointsLeft = board.left + board.width/3
                 let am = {
-                height : 30,
-                width:200
-            }
-            let margin = 0
-            pointsData = pointsData.map(p => {
-                margin += 30
-                return {...p, top: board.height, left: board.width/3 + margin}
+                    height : 30,
+                    width:250
+                }
+                let margin = 20
+                pointsData = pointsData.map(p => {
+                    margin += 30
+                    return {...p, top: board.height-30, left: board.width/3 + margin}
+
+                })
+                console.log(pointsData);
+                setPointsPositions(pointsData)
+
+                let divHeight = am.height
+                // let divHeight = 30
+                setDivHeightSize(divHeight)
+                let halfSizeNumber = Math.ceil(countriesCopy.length/2);
+                setHalfSize(halfSizeNumber)
+                sortedArray = sortedArray.sort(compare)
+                setSortedCountries(sortedArray)
+
+                let topFirstHalf = 0
+                let leftFirstHalf = 0
+
+                let topSecondHalf = 0
+                let leftSecondHalf = am.width + 30
+                setSecondHalfLeft(leftSecondHalf)
+
+                for (let i = 0 ; i < sortedArray.length ; i++) {
+                    let c = sortedArray[i]
+                    let pos = {}
+                    if (i < halfSizeNumber) {
+                        pos = {
+                            top: topFirstHalf,
+                            left:leftFirstHalf
+                        }
+                        topFirstHalf += divHeight
+                    } else {
+                        pos = {
+                            top: topSecondHalf,
+                            left:leftSecondHalf
+                        }
+                        topSecondHalf += divHeight
+                    }
+                    c.position = pos
+
+                    let indexInOriginal = countriesCopy.findIndex(ct => ct.id === c.id)
+                    countriesCopy[indexInOriginal].position = {...c.position}
+                }
+                console.log("sorted", sortedArray);
+                console.log("all-no sort", countriesCopy)
+                setSortedCountries(sortedArray)
+                setCountries(countriesCopy)
+
 
             })
-            console.log(pointsData);
-            setPointsPositions(pointsData)
 
-            let divHeight = am.height
-            // let divHeight = 30
-            setDivHeightSize(divHeight)
-            let halfSizeNumber = Math.ceil(countriesCopy.length/2);
-            setHalfSize(halfSizeNumber)
-            sortedArray = sortedArray.sort(compare)
-            setSortedCountries(sortedArray)
 
-            let topFirstHalf = 0
-            let leftFirstHalf = 0
 
-            let topSecondHalf = 0
-            let leftSecondHalf = am.width + 30
-            setSecondHalfLeft(leftSecondHalf)
-
-            for (let i = 0 ; i < sortedArray.length ; i++) {
-                let c = sortedArray[i]
-                let pos = {}
-                if (i < halfSizeNumber) {
-                   pos = {
-                        top: topFirstHalf,
-                        left:leftFirstHalf
-                    }
-                    topFirstHalf += divHeight
-                } else {
-                   pos = {
-                        top: topSecondHalf,
-                        left:leftSecondHalf
-                    }
-                    topSecondHalf += divHeight
-                }
-                c.position = pos
-
-                let indexInOriginal = countriesCopy.findIndex(ct => ct.id === c.id)
-                countriesCopy[indexInOriginal].position = {...c.position}
-            }
-            setSortedCountries(sortedArray)
-            setCountries(countriesCopy)
 
         },2000)
     },[])
@@ -201,21 +226,91 @@ function VotingTable() {
     async function startVoting(){
 
 
-        let countries = ["Armenia", "Albania", "Italy", "Greece",  "Georgia", "Germany"]
-            let groupPoinst = ["small", "middle", "high"]
-      let p = 8
-        let positions = [...pointsPositions]
-        for (let i = 0; i<3; i++) {
-            let random_number = Math.floor(Math.random() * (countries.length-1));
-            console.log("Random number",random_number,countries.length-1, countries);
-            countries = countries.filter(i => i!== countries[random_number])
 
-            console.log("///",groupPoinst[i]);
-            let l = await pointsGive(countries[random_number],p,groupPoinst[i],positions)
-            console.log("why",l);
-            positions = [...l]
-            p+=2
-        }
+
+
+            console.log("init start--------")
+            const recognizer = await createModel();
+            const classLabels = recognizer.wordLabels(); // get class labels
+            console.log("classes====",classLabels);
+            const labelContainer = document.getElementById("label-container");
+            console.log("data===",labelContainer);
+            for (let i = 0; i < classLabels.length; i++) {
+                labelContainer.appendChild(document.createElement("div"));
+            }
+
+            // listen() takes two arguments:
+            // 1. A callback function that is invoked anytime a word is recognized.
+            // 2. A configuration object with adjustable fields
+            recognizer.listen(result => {
+                console.log("____________",result);
+                const scores = result.scores; // probability of prediction for each class
+                // render the probability scores per class
+                for (let i = 0; i < classLabels.length; i++) {
+                    const classPrediction = classLabels[i] + ": " + result.scores[i].toFixed(2);
+                    labelContainer.childNodes[i].innerHTML = classPrediction;
+                    if (result.scores[i].toFixed(2) > 0.6) {
+                        setAction(classLabels[i] )
+                    }
+
+
+                }
+            }, {
+                includeSpectrogram: true, // in case listen should return result.spectrogram
+                probabilityThreshold: 0.65,
+                invokeCallbackOnNoiseAndUnknown: true,
+                overlapFactor: 0.50 // probably want between 0.5 and 0.75. More info in README
+            });
+
+            // Stop the recognition in 5 seconds.
+            // setTimeout(() => recognizer.stopListening(), 5000);
+
+
+
+
+
+
+
+
+
+
+        // pointsGive(countries[random_number],p,groupPoinst[i],positions)
+
+
+
+      //
+      //   let countries = ["Armenia", "Portugal", "Italy", "Georgia",  "Albania", "France"]
+      //       let groupPoinst = ["small", "middle", "high"]
+      // let p = 8
+      //   let positions = [...pointsPositions]
+      //   for (let i = 0; i<3; i++) {
+      //       let random_number = Math.floor(Math.random() * (countries.length-1));
+      //       console.log("Random number",random_number,countries.length-1, countries);
+      //       countries = countries.filter(i => i!== countries[random_number])
+      //
+      //       console.log("///",groupPoinst[i]);
+      //       let l = await pointsGive(countries[random_number],p,groupPoinst[i],positions)
+      //       console.log("why",l);
+      //       positions = [...l]
+      //       p+=2
+      //   }
+    }
+
+
+    async function createModel() {
+        const checkpointURL = URL + "model.json"; // model topology
+        const metadataURL = URL + "metadata.json"; // model metadata
+
+        const recognizer = speech.create(
+            "BROWSER_FFT", // fourier transform type, not useful to change
+            undefined, // speech commands vocabulary feature, not useful for your models
+            checkpointURL,
+            metadataURL);
+
+        // check that model and metadata are loaded via HTTPS requests.
+        await recognizer.ensureModelLoaded();
+
+        return recognizer;
     }
 
 
@@ -240,7 +335,7 @@ let sound = new Audio(transitionSound)
         let selectedPointIndex  = pointsPositionsCopy.findIndex(pt => pt.id === type)
         pointsPositionsCopy[selectedPointIndex] = { ...pointsPositionsCopy[selectedPointIndex],
             top: countryElement.top - board.top ,
-            left:countryElement.left - board.left
+            left:countryElement.width
         }
         console.log("bug2",board.top - countryElement.top, board.left - countryElement.left);
         setPointsPositions(pointsPositionsCopy)
@@ -336,11 +431,27 @@ console.log("end ----- goTo")
                     {countries.map((c) => (
                         <div
                             style={{
-                                top: `${c.position.top}px`,
-                                left: `${c.position.left}px`,
+                                top: `${c && c?.position && c.position?.top && c.position.top}px`,
+                                left: `${c && c?.position && c.position?.left && c.position.left}px`,
                                 border: (selectedCountry && selectedCountry === c.id) && '2px solid black !important'
                             }}
-                            className={"position-absolute country " + (selectedCountry && selectedCountry === c.id ? "selected-country" : '')} id={c.name} key={c.name}> __ {c.points}_{c.id}</div>
+                            className={"position-absolute country " + (selectedCountry && selectedCountry === c.id ? "selected-country" : '')} id={c.name} key={c.name}>
+                            <div className={"country-content d-flex align-items-center justify-content-between"}>
+                               <div className={"country-content-left d-flex align-items-center"}>
+                                   <div className={'flag mr-3'}>
+                                       <img src={c.icon} alt=""/>
+                                   </div>
+                                   <div className={'mr-2'}>
+                                       {c.name}
+                                   </div>
+                               </div>
+
+                                <div className={'mr-2'}>
+                                    {c.points}
+                                </div>
+                            </div>
+
+                        </div>
                     ))}
                     {pointsData.map(p => (
                         <div className={'mr-2'}>
@@ -348,7 +459,7 @@ console.log("end ----- goTo")
                                  style={{top:pointsPositions.length && pointsPositions.find(pnt => pnt.id === p.id) && pointsPositions.find(pnt => pnt.id === p.id).top || '0',
                                      left:pointsPositions.length && pointsPositions.find(pnt => pnt.id === p.id) && pointsPositions.find(pnt => pnt.id === p.id).left || '0',
                                  }}
-                                 className={"point display-flex d-flex justify-content-center align-items-center position-absolute" } >{p.value}</div>
+                                 className={`point display-flex d-flex justify-content-center align-items-center position-absolute ${selectedPoint && p.id === selectedPoint ? "selected-point" : ''  }` } >{p.value}</div>
                         </div>
                     ))}
                 </div>
@@ -359,6 +470,7 @@ console.log("end ----- goTo")
 
 
                 </Row>
+                <div id="label-container"></div>
 
                 {/*<h1>Voting table {haLfSize} | {haLfSize}</h1>*/}
                 {/*<h1 onClick={() => goTo("Albania", 12)}>12 to Albania</h1>*/}

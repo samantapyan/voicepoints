@@ -3,16 +3,16 @@ import {BrowserRouter as Router, Route, Routes} from "react-router-dom";
 import Home from './pages/Home/Home'
 import routes from './routes'
 import VotingTable from "./pages/VotingTable/VotingTable";
-import {useEffect} from "react";
 import Registration from "./pages/Registration/Registration";
 import { setUser } from "./store/slices/UserSlice.js";
 import firebase from "./services/firebase"
 import {useDispatch, useSelector} from "react-redux";
 import HeaderApp from './pages/HeaderApp/HeaderApp'
-
+import React, {useEffect, useState} from 'react'
 
 function App() {
     const dispatch = useDispatch()
+    const [isReady, setReady] = useState(false);
 
 
 
@@ -20,6 +20,7 @@ function App() {
         console.log("start all")
         firebase.init((value)=>{
             console.log("YEAH", value)
+            setReady(true)
             console.log("*",firebase.currentUser);
             firebase.getCurrenUser(data => {
                 console.log("Data", data)
@@ -67,13 +68,18 @@ setTimeout(()=>{
     
   return (
 <>
-    <HeaderApp/>
-   <Routes>
-     {routes.map((route, ind) => (
-         <Route {...route} key={ind}/>
-     ))}
+    {isReady && (
+        <>
+            <HeaderApp/>
+            <Routes>
+                {routes.map((route, ind) => (
+                    <Route {...route} key={ind}/>
+                ))}
 
-   </Routes>
+            </Routes>
+        </>
+    )}
+
 </>
   );
 }

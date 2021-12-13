@@ -36,6 +36,28 @@ class FirebaseService {
                 callback(r)
             })
     }
+    getAllCountries = (callback) => {
+        let result = []
+        this.db
+            .collection('countries')
+            .where('id', '!=', 0)
+            .get()
+            .then(querySnapshot => {
+                querySnapshot.forEach(snap => {
+                    result.push(snap.data())
+                })
+                callback(result)
+            })
+    }
+    updateCountry = (data, callback) => {
+        this.db
+            .collection('countries')
+            .doc(data.docId)
+            .update(data)
+            .then(querySnapshot => {
+                callback(true)
+            })
+    }
     getCurrenUser = (callback) =>{
        callback(firebase.auth().currentUser)
     }
