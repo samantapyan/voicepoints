@@ -1,6 +1,14 @@
 
-.header-app{
-
+.footer-app{
+  background: url("./../../media/backgrounds/back2.svg");
+  min-height: 200px;
+  background-repeat: no-repeat;
+  background-size: 100%;
+  margin: 50px 0;
+  color: white !important;
+  &-text {
+    font-size: 14px !important;
+  }
   &-content {
     background: white;
     .home-banner{

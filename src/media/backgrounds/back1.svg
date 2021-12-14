@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1920" height="1080" viewBox="0 0 1920 1080">
+  <defs>
+    <radialGradient id="radial-gradient" cx="0.893" cy="0.866" r="1.298" gradientTransform="matrix(-0.279, -0.96, 0.582, -0.169, 0.638, 1.87)" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#005"/>
+      <stop offset="0.917" stop-color="#2036fe"/>
+      <stop offset="1" stop-color="#2036ff"/>
+    </radialGradient>
+  </defs>
+  <g id="Group_8" data-name="Group 8" transform="translate(-213 -2471)">
+    <rect id="Rectangle_2" data-name="Rectangle 2" width="1920" height="1080" transform="translate(213 2471)" fill="url(#radial-gradient)"/>
+    <g id="Group_2" data-name="Group 2" transform="translate(493.21 2479.818) rotate(20)">
+      <path id="Path_1" data-name="Path 1" d="M71.976,103.71,268.058-24.541C298.042-44.152,306.45,2.15,286.839,78.879s-59.817,154.828-89.8,174.439L.956,381.568c-29.984,19.612-38.393-26.691-18.781-103.419S41.992,123.321,71.976,103.71Z" transform="translate(-117.254 175.644) rotate(-20)" fill="rgba(255,255,255,0.08)"/>
+    </g>
+    <g id="Group_6" data-name="Group 6" transform="translate(867.648 2399.126) rotate(20)">
+      <path id="Path_1-2" data-name="Path 1" d="M195.1,233.273,646.661-4.384c69.052-36.342,95.569,60.395,59.227,216.067s-121.78,311.33-190.832,347.672L63.491,797.012C-5.561,833.354-32.078,736.617,4.264,580.945S126.044,269.615,195.1,233.273Z" transform="translate(-92.365 302.133) rotate(-20)" fill="rgba(255,255,255,0.08)"/>
+    </g>
+    <g id="Group_7" data-name="Group 7" transform="translate(1853.876 2458.836) rotate(20)">
+      <path id="Path_1-3" data-name="Path 1" d="M102.706,105.9,319.885,15.191C353.1,1.32,368.773,43.8,354.9,110.071s-52.038,131.24-85.248,145.111L52.475,345.891c-33.21,13.871-48.888-28.608-35.017-94.88S69.5,119.771,102.706,105.9Z" transform="translate(-92.365 152.058) rotate(-20)" fill="rgba(255,255,255,0.08)"/>
+    </g>
+  </g>
+</svg>

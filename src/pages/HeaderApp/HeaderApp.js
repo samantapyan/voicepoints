@@ -16,8 +16,8 @@ const HeaderApp = () => {
 
 
     return (
-        <div className="App">
-                <Row className="mr-0 ml-0 justify-content-end" xs={2} md={4} lg={6} >
+        <div className="header-app">
+                <Row className="header-app-content  mr-0 ml-0 justify-content-end" xs={2} md={4} lg={6} >
                     <Col></Col>
                     <Col></Col>
                     <Col className={'text-right mr-3'}>

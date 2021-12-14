@@ -8,6 +8,8 @@ import { setUser } from "./store/slices/UserSlice.js";
 import firebase from "./services/firebase"
 import {useDispatch, useSelector} from "react-redux";
 import HeaderApp from './pages/HeaderApp/HeaderApp'
+import FooterApp from './pages/FooterApp/FooterApp'
+
 import React, {useEffect, useState} from 'react'
 
 function App() {
@@ -77,6 +79,7 @@ setTimeout(()=>{
                 ))}
 
             </Routes>
+            <FooterApp/>
         </>
     )}
 

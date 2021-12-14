@@ -112,6 +112,23 @@ function VotingTable() {
     useEffect(()=>{
 
         console.log("action - ",action)
+        if (action === "pointsTwelve") {
+            setSelectedPoint("high")
+        }
+        if (action === "pointsTen") {
+            setSelectedPoint("middle")
+        }
+        if (action === "pointsEight") {
+            setSelectedPoint("small")
+        }
+        if (action === "Armenia" && selectedPoint) {
+            console.log("Armenia",pointsPositions)
+            let selectedPointD =  pointsPositions.find(el => el.id === selectedPoint )
+            if (selectedPointD) {
+                pointsGive("Armenia", 12, selectedPointD.id,pointsPositions)
+            }
+
+        }
 
     }, [action])
 
@@ -219,7 +236,7 @@ function VotingTable() {
             setTimeout( async ()=>{
                let pGrop  = await goTo(name, p, type,positions)
                 resolve(pGrop)
-            },2000)
+            },500)
         })
 }
 
@@ -363,10 +380,11 @@ let sound = new Audio(transitionSound)
              countryElement = document.getElementById(countryName).getBoundingClientRect()
             board = document.getElementById('board').getBoundingClientRect()
             let selectedPointIndex  = pointsPositionsCopy.findIndex(pt => pt.id === type)
+
             pointsPositionsCopy[selectedPointIndex] = { ...pointsPositionsCopy[selectedPointIndex],
                 ...sortedCountriesData[indexInSorted].position
             }
-
+            console.log("***",pointsPositionsCopy, type, selectedPointIndex)
 
             console.log("bug-------------",countryElement.top - board.top ,countryElement.left - board.left, pointsPositionsCopy);
             setPointsPositions(pointsPositionsCopy)
@@ -422,11 +440,19 @@ console.log("end ----- goTo")
     }
 
 
+    function test() {
+        let selectedPointD =  pointsPositions.find(el => el.id === "high" )
+        if (selectedPointD) {
+            pointsGive("Armenia", 12, selectedPointD.id,pointsPositions)
+        }
+
+    }
+
     return (
         <div className={'main-page-voting'}>
             <div className={'main-page-voting-templete position-relative'}>
 
-<button onClick={startVoting}>start voting</button>
+<Button onClick={startVoting} className={'ml-4'}>Start voting</Button>
                 <div className={"board mx-auto"} id={"board"}>
                     {countries.map((c) => (
                         <div
@@ -471,7 +497,7 @@ console.log("end ----- goTo")
 
                 </Row>
                 <div id="label-container"></div>
-
+<h1 onClick={test}>test</h1>
                 {/*<h1>Voting table {haLfSize} | {haLfSize}</h1>*/}
                 {/*<h1 onClick={() => goTo("Albania", 12)}>12 to Albania</h1>*/}
                 {/*<h1 onClick={() => goTo("Sweden", 12)}>12 to Sweden</h1>*/}

@@ -19,6 +19,11 @@ const Home = () => {
                     <span className={'home-banner-1-text'}>points</span>
                 </Container>
             </div>
+            <div className={'home-banner-add'}>
+
+
+            </div>
+
             <div className={'home-banner-3'}>
                 <Container>
                     <span className={'home-banner-1-text'}>Be a </span>
