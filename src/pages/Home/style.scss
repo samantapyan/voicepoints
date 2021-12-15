@@ -24,8 +24,8 @@
     }
   }
   &-add {
-    background: url("./../../media/backgrounds/back1.svg");
-    min-height: 400px;
+    background: url("./../../media/backgrounds/host.png");
+    min-height: 600px;
     background-repeat: no-repeat;
     background-size: 100%;
     margin: 50px 0;
@@ -43,6 +43,13 @@
       color: white;
     }
   }
+  &-voice {
+    background: url("./../../media/backgrounds/voice.svg");
+    min-height: 200px;
+    background-repeat: no-repeat;
+    background-size: 100%;
+    margin: 50px 0;
+}
   &-3 {
     background: rgb(8,0,214);
     padding: 50px 0;

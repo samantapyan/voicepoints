@@ -129,6 +129,30 @@ function VotingTable() {
             }
 
         }
+        if (action === "Malta" && selectedPoint) {
+            console.log("Malta",pointsPositions)
+            let selectedPointD =  pointsPositions.find(el => el.id === selectedPoint )
+            if (selectedPointD) {
+                pointsGive("Malta", 12, selectedPointD.id,pointsPositions)
+            }
+
+        }
+        if (action === "Poland" && selectedPoint) {
+            console.log("Poland",pointsPositions)
+            let selectedPointD =  pointsPositions.find(el => el.id === selectedPoint )
+            if (selectedPointD) {
+                pointsGive("Poland", 12, selectedPointD.id,pointsPositions)
+            }
+
+        }
+        if (action === "Germany" && selectedPoint) {
+            console.log("Germany",pointsPositions)
+            let selectedPointD =  pointsPositions.find(el => el.id === selectedPoint )
+            if (selectedPointD) {
+                pointsGive("Germany", 12, selectedPointD.id,pointsPositions)
+            }
+
+        }
 
     }, [action])
 
@@ -248,7 +272,8 @@ function VotingTable() {
 
             console.log("init start--------")
             const recognizer = await createModel();
-            const classLabels = recognizer.wordLabels(); // get class labels
+        console.log("rec=",recognizer);
+        const classLabels = recognizer.wordLabels(); // get class labels
             console.log("classes====",classLabels);
             const labelContainer = document.getElementById("label-container");
             console.log("data===",labelContainer);
@@ -264,9 +289,9 @@ function VotingTable() {
                 const scores = result.scores; // probability of prediction for each class
                 // render the probability scores per class
                 for (let i = 0; i < classLabels.length; i++) {
-                    const classPrediction = classLabels[i] + ": " + result.scores[i].toFixed(2);
-                    labelContainer.childNodes[i].innerHTML = classPrediction;
-                    if (result.scores[i].toFixed(2) > 0.6) {
+                    // const classPrediction = classLabels[i] + ": " + result.scores[i].toFixed(2);
+                    // labelContainer.childNodes[i].innerHTML = classPrediction;
+                    if (result.scores[i].toFixed(2) > 0.7) {
                         setAction(classLabels[i] )
                     }
 
@@ -276,7 +301,7 @@ function VotingTable() {
                 includeSpectrogram: true, // in case listen should return result.spectrogram
                 probabilityThreshold: 0.65,
                 invokeCallbackOnNoiseAndUnknown: true,
-                overlapFactor: 0.50 // probably want between 0.5 and 0.75. More info in README
+                overlapFactor: 0.60 // probably want between 0.5 and 0.75. More info in README
             });
 
             // Stop the recognition in 5 seconds.
@@ -317,7 +342,7 @@ function VotingTable() {
     async function createModel() {
         const checkpointURL = URL + "model.json"; // model topology
         const metadataURL = URL + "metadata.json"; // model metadata
-
+console.log("model+++++")
         const recognizer = speech.create(
             "BROWSER_FFT", // fourier transform type, not useful to change
             undefined, // speech commands vocabulary feature, not useful for your models
@@ -325,8 +350,9 @@ function VotingTable() {
             metadataURL);
 
         // check that model and metadata are loaded via HTTPS requests.
+        console.log("model+++++2")
         await recognizer.ensureModelLoaded();
-
+        console.log("model+++++3")
         return recognizer;
     }
 
@@ -432,7 +458,8 @@ let sound = new Audio(transitionSound)
             setSortedCountries(sortedCountriesData)
             console.log("???????????????????",pointsPositionsCopy);
             resolve(pointsPositionsCopy)
-
+setSelectedCountry('')
+            setSelectedPoint('')
         },1000)
 
 console.log("end ----- goTo")

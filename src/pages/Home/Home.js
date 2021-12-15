@@ -3,6 +3,9 @@ import './style.scss';
 import {Link} from "react-router-dom";
 import * as ReactBootstrap from 'react-bootstrap'
 import {useDispatch, useSelector} from "react-redux";
+import voice from './../../media/backgrounds/voice.svg'
+import host from './../../media/backgrounds/host.png'
+
 // import {Link} from 'react-router-dom'
 const Row = ReactBootstrap.Row;
 const Col = ReactBootstrap.Col;
@@ -37,13 +40,16 @@ const Home = () => {
                     </div>
                 </Container>
             </div>
+
+
             <div className={'home-banner-3'}>
                 <Container>
                     <span className={'home-banner-1-text'}  >Go to </span>
                     <Link to={'/votings'} className={'home-banner-1-main-word no-link font-weight-bold pr-4'}> Simulation Page</Link>
                 </Container>
             </div>
-
+            <div className={'home-banner-voice'}>
+            </div>
             <div className={'home-banner-2'}>
                 <Container>
                     <span className={'home-banner-1-text'}>Watch</span>
