@@ -1,15 +1,44 @@
 import { Button, Table } from 'react-bootstrap';
 import './style.scss'
-import {useEffect, useState} from "react";
+import {useEffect, useState, useRef} from "react";
 import transitionSound from './../../sounds/points_go.wav'
 import {Row} from 'react-bootstrap'
 import firebase from "./../../services/firebase"
 import pointBack from "./../../media/backgrounds/points-back.svg"
 import * as speech from "@tensorflow-models/speech-commands";
 import React from "react";
+import SpeechRecognition, { useSpeechRecognition } from "react-speech-recognition";
+
 
 function VotingTable() {
-    const URL = "https://teachablemachine.withgoogle.com/models/3cCfdVsTm/"
+    // const URL = "https://teachablemachine.withgoogle.com/models/3cCfdVsTm/"
+    const { transcript, resetTranscript } = useSpeechRecognition();
+    const [isListening, setIsListening] = useState(false);
+    const microphoneRef = useRef(null);
+    const [speechData, setSpeechData] = useState("")
+
+
+    const countryLibrary = {
+        Albania: ["albania", "albania"],
+        Armenia: ["armenia", "amenia"],
+        Azerbaijan: ["azerbaijan"],
+        Bulgaria: ["bulgaria"],
+        France: ["france"],
+        Germany: ["germany"],
+        Georgia : [ "georgia" ],
+        Ireland : ["ireland"],
+        Italy : ["italy"],
+        Khazakhstan : ["kazakhstan"],
+        Malta : ["malta"],
+        Netherlands : ["netherlands"],
+        NorthMacedonia : ["north macedonia", "macedonia"],
+        Poland : ["poland"],
+        Portugal : ["portugal"],
+        Russia : ["russia"],
+        Serbia : ["serbia", "srbia"],
+        Spain : ["spain", "pain"],
+        Ukraine: ["ukraine"]
+    };
 
 
     let pointsData = [
@@ -26,6 +55,69 @@ function VotingTable() {
             id: "small"
         }
     ]
+
+    useEffect(()=>{
+        console.log("000",transcript);
+        // if (speechData === "") {
+        //     setSpeechData(transcript)
+        //     // resetTranscript();
+        // } else {
+        //     let old = speechData
+        //     let now = transcript
+        //     let newData = now.replace(old, "")
+        //     console.log("old=", old)
+        //     console.log("now=", now)
+        //     console.log("newData=", newData)
+        //     //
+        //     //
+        //     setSpeechData(now)
+        //     // resetTranscript();
+        // }
+
+
+
+        if (transcript && transcript.includes("12 points") || transcript.includes("12 point") || transcript.includes("twelve point")) {
+            setSelectedPoint("high")
+            resetTranscript();
+        }
+
+        if (transcript && transcript.includes("10 points") || transcript.includes("10 point") || transcript.includes("ten point")) {
+            console.log("10 points is")
+            setSelectedPoint("middle")
+            resetTranscript();
+        }
+
+
+        if (transcript && transcript.includes("8 points") || transcript.includes("8 point") || transcript.includes("eight points") ) {
+            console.log("8 points is")
+            setSelectedPoint("small")
+            resetTranscript();
+        }
+
+        for (let country in countryLibrary) {
+            // ["albania", "albania"]
+
+            let c = countryLibrary[country];
+
+            let isMatch = c.find((itm) => transcript.toLowerCase().includes(itm));
+
+            if (isMatch) {
+                console.log("is match =", isMatch);
+                let selectedPointD =  pointsPositions.find(el => el.id === selectedPoint )
+                console.log("sekected point ===", selectedPoint)
+                let p = pointsData.find(itm => itm.id === selectedPoint)
+                console.log("p =",p);
+                if (selectedPointD) {
+                    resetTranscript();
+                    pointsGive(country, p.value, selectedPointD.id,pointsPositions)
+                }
+
+            }
+        }
+
+
+
+    },[ transcript])
 
     let cs = [
         {
@@ -102,6 +194,7 @@ function VotingTable() {
     const [secondHalfLeft, setSecondHalfLeft] = useState(0)
     const [selectedCountry, setSelectedCountry] = useState(false)
     const [pointsPositions, setPointsPositions] = useState(false)
+    const [pointsPositionsOriginal, setPointsPositionsOriginal] =useState(false)
     const [action, setAction] = useState(null)
 
     useEffect(()=>{
@@ -109,52 +202,52 @@ function VotingTable() {
     },[])
 
 
-    useEffect(()=>{
-
-        console.log("action - ",action)
-        if (action === "pointsTwelve") {
-            setSelectedPoint("high")
-        }
-        if (action === "pointsTen") {
-            setSelectedPoint("middle")
-        }
-        if (action === "pointsEight") {
-            setSelectedPoint("small")
-        }
-        if (action === "Armenia" && selectedPoint) {
-            console.log("Armenia",pointsPositions)
-            let selectedPointD =  pointsPositions.find(el => el.id === selectedPoint )
-            if (selectedPointD) {
-                pointsGive("Armenia", 12, selectedPointD.id,pointsPositions)
-            }
-
-        }
-        if (action === "Malta" && selectedPoint) {
-            console.log("Malta",pointsPositions)
-            let selectedPointD =  pointsPositions.find(el => el.id === selectedPoint )
-            if (selectedPointD) {
-                pointsGive("Malta", 12, selectedPointD.id,pointsPositions)
-            }
-
-        }
-        if (action === "Poland" && selectedPoint) {
-            console.log("Poland",pointsPositions)
-            let selectedPointD =  pointsPositions.find(el => el.id === selectedPoint )
-            if (selectedPointD) {
-                pointsGive("Poland", 12, selectedPointD.id,pointsPositions)
-            }
-
-        }
-        if (action === "Germany" && selectedPoint) {
-            console.log("Germany",pointsPositions)
-            let selectedPointD =  pointsPositions.find(el => el.id === selectedPoint )
-            if (selectedPointD) {
-                pointsGive("Germany", 12, selectedPointD.id,pointsPositions)
-            }
-
-        }
-
-    }, [action])
+    // useEffect(()=>{
+    //
+    //     console.log("action - ",action)
+    //     if (action === "pointsTwelve") {
+    //         setSelectedPoint("high")
+    //     }
+    //     if (action === "pointsTen") {
+    //         setSelectedPoint("middle")
+    //     }
+    //     if (action === "pointsEight") {
+    //         setSelectedPoint("small")
+    //     }
+    //     if (action === "Armenia" && selectedPoint) {
+    //         console.log("Armenia",pointsPositions)
+    //         let selectedPointD =  pointsPositions.find(el => el.id === selectedPoint )
+    //         if (selectedPointD) {
+    //             pointsGive("Armenia", 12, selectedPointD.id,pointsPositions)
+    //         }
+    //
+    //     }
+    //     if (action === "Malta" && selectedPoint) {
+    //         console.log("Malta",pointsPositions)
+    //         let selectedPointD =  pointsPositions.find(el => el.id === selectedPoint )
+    //         if (selectedPointD) {
+    //             pointsGive("Malta", 12, selectedPointD.id,pointsPositions)
+    //         }
+    //
+    //     }
+    //     if (action === "Poland" && selectedPoint) {
+    //         console.log("Poland",pointsPositions)
+    //         let selectedPointD =  pointsPositions.find(el => el.id === selectedPoint )
+    //         if (selectedPointD) {
+    //             pointsGive("Poland", 12, selectedPointD.id,pointsPositions)
+    //         }
+    //
+    //     }
+    //     if (action === "Germany" && selectedPoint) {
+    //         console.log("Germany",pointsPositions)
+    //         let selectedPointD =  pointsPositions.find(el => el.id === selectedPoint )
+    //         if (selectedPointD) {
+    //             pointsGive("Germany", 12, selectedPointD.id,pointsPositions)
+    //         }
+    //
+    //     }
+    //
+    // }, [action])
 
 
     function compare(a, b) {
@@ -198,11 +291,10 @@ function VotingTable() {
                 pointsData = pointsData.map(p => {
                     margin += 30
                     return {...p, top: board.height-30, left: board.width/3 + margin}
-
                 })
                 console.log(pointsData);
                 setPointsPositions(pointsData)
-
+                setPointsPositionsOriginal(pointsData)
                 let divHeight = am.height
                 // let divHeight = 30
                 setDivHeightSize(divHeight)
@@ -250,8 +342,71 @@ function VotingTable() {
 
 
 
-        },2000)
+        },500)
     },[])
+
+
+
+    function startingRecognizatation(){
+
+        if (!SpeechRecognition.browserSupportsSpeechRecognition()) {
+            return (
+                <div className="mircophone-container">
+                    Browser is not Support Speech Recognition.
+                </div>
+            );
+        }
+
+
+
+        // const speechGlobal =  window.webkitSpeechRecognition
+        //
+        // const  recognition = new speechGlobal();
+        // console.log("global", recognition)
+        // recognition.start();
+        // recognition.addEventListener("result", (e) => {
+        //     console.log("e==",e)
+        //     const text = Array.from(e.results)
+        //         .map((result) => result[0])
+        //         .map((result) => result.transcript)
+        //         .join("");
+        //
+        //     console.log("data is" )
+        //     if (e.results[0].isFinal) {
+        //       console.log("data is",text )
+        //
+        //
+        //     }
+        // });
+        //
+        // recognition.addEventListener("end", () => {
+        //     recognition.start();
+        // });
+
+
+
+
+    }
+
+
+
+    const handleListing = () => {
+        setIsListening(true);
+        microphoneRef.current.classList.add("listening");
+        SpeechRecognition.startListening({
+            continuous: true,
+        });
+    };
+    const stopHandle = () => {
+        setIsListening(false);
+        microphoneRef.current.classList.remove("listening");
+        SpeechRecognition.stopListening();
+    };
+    const handleReset = () => {
+        stopHandle();
+        resetTranscript();
+    };
+
 
 
  function pointsGive(name, p, type,positions){
@@ -260,101 +415,101 @@ function VotingTable() {
             setTimeout( async ()=>{
                let pGrop  = await goTo(name, p, type,positions)
                 resolve(pGrop)
-            },500)
+            },100)
         })
 }
 
-    async function startVoting(){
+    // async function startVoting(){
+    //
+    //
+    //
+    //
+    //
+    //         console.log("init start--------")
+    //         const recognizer = await createModel();
+    //     console.log("rec=",recognizer);
+    //     const classLabels = recognizer.wordLabels(); // get class labels
+    //         console.log("classes====",classLabels);
+    //         const labelContainer = document.getElementById("label-container");
+    //         console.log("data===",labelContainer);
+    //         for (let i = 0; i < classLabels.length; i++) {
+    //             labelContainer.appendChild(document.createElement("div"));
+    //         }
+    //
+    //         // listen() takes two arguments:
+    //         // 1. A callback function that is invoked anytime a word is recognized.
+    //         // 2. A configuration object with adjustable fields
+    //         recognizer.listen(result => {
+    //             console.log("____________",result);
+    //             const scores = result.scores; // probability of prediction for each class
+    //             // render the probability scores per class
+    //             for (let i = 0; i < classLabels.length; i++) {
+    //                 // const classPrediction = classLabels[i] + ": " + result.scores[i].toFixed(2);
+    //                 // labelContainer.childNodes[i].innerHTML = classPrediction;
+    //                 if (result.scores[i].toFixed(2) > 0.7) {
+    //                     setAction(classLabels[i] )
+    //                 }
+    //
+    //
+    //             }
+    //         }, {
+    //             includeSpectrogram: true, // in case listen should return result.spectrogram
+    //             probabilityThreshold: 0.65,
+    //             invokeCallbackOnNoiseAndUnknown: true,
+    //             overlapFactor: 0.60 // probably want between 0.5 and 0.75. More info in README
+    //         });
+    //
+    //         // Stop the recognition in 5 seconds.
+    //         // setTimeout(() => recognizer.stopListening(), 5000);
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //     // pointsGive(countries[random_number],p,groupPoinst[i],positions)
+    //
+    //
+    //
+    //   //
+    //   //   let countries = ["Armenia", "Portugal", "Italy", "Georgia",  "Albania", "France"]
+    //   //       let groupPoinst = ["small", "middle", "high"]
+    //   // let p = 8
+    //   //   let positions = [...pointsPositions]
+    //   //   for (let i = 0; i<3; i++) {
+    //   //       let random_number = Math.floor(Math.random() * (countries.length-1));
+    //   //       console.log("Random number",random_number,countries.length-1, countries);
+    //   //       countries = countries.filter(i => i!== countries[random_number])
+    //   //
+    //   //       console.log("///",groupPoinst[i]);
+    //   //       let l = await pointsGive(countries[random_number],p,groupPoinst[i],positions)
+    //   //       console.log("why",l);
+    //   //       positions = [...l]
+    //   //       p+=2
+    //   //   }
+    // }
 
 
-
-
-
-            console.log("init start--------")
-            const recognizer = await createModel();
-        console.log("rec=",recognizer);
-        const classLabels = recognizer.wordLabels(); // get class labels
-            console.log("classes====",classLabels);
-            const labelContainer = document.getElementById("label-container");
-            console.log("data===",labelContainer);
-            for (let i = 0; i < classLabels.length; i++) {
-                labelContainer.appendChild(document.createElement("div"));
-            }
-
-            // listen() takes two arguments:
-            // 1. A callback function that is invoked anytime a word is recognized.
-            // 2. A configuration object with adjustable fields
-            recognizer.listen(result => {
-                console.log("____________",result);
-                const scores = result.scores; // probability of prediction for each class
-                // render the probability scores per class
-                for (let i = 0; i < classLabels.length; i++) {
-                    // const classPrediction = classLabels[i] + ": " + result.scores[i].toFixed(2);
-                    // labelContainer.childNodes[i].innerHTML = classPrediction;
-                    if (result.scores[i].toFixed(2) > 0.7) {
-                        setAction(classLabels[i] )
-                    }
-
-
-                }
-            }, {
-                includeSpectrogram: true, // in case listen should return result.spectrogram
-                probabilityThreshold: 0.65,
-                invokeCallbackOnNoiseAndUnknown: true,
-                overlapFactor: 0.60 // probably want between 0.5 and 0.75. More info in README
-            });
-
-            // Stop the recognition in 5 seconds.
-            // setTimeout(() => recognizer.stopListening(), 5000);
-
-
-
-
-
-
-
-
-
-
-        // pointsGive(countries[random_number],p,groupPoinst[i],positions)
-
-
-
-      //
-      //   let countries = ["Armenia", "Portugal", "Italy", "Georgia",  "Albania", "France"]
-      //       let groupPoinst = ["small", "middle", "high"]
-      // let p = 8
-      //   let positions = [...pointsPositions]
-      //   for (let i = 0; i<3; i++) {
-      //       let random_number = Math.floor(Math.random() * (countries.length-1));
-      //       console.log("Random number",random_number,countries.length-1, countries);
-      //       countries = countries.filter(i => i!== countries[random_number])
-      //
-      //       console.log("///",groupPoinst[i]);
-      //       let l = await pointsGive(countries[random_number],p,groupPoinst[i],positions)
-      //       console.log("why",l);
-      //       positions = [...l]
-      //       p+=2
-      //   }
-    }
-
-
-    async function createModel() {
-        const checkpointURL = URL + "model.json"; // model topology
-        const metadataURL = URL + "metadata.json"; // model metadata
-console.log("model+++++")
-        const recognizer = speech.create(
-            "BROWSER_FFT", // fourier transform type, not useful to change
-            undefined, // speech commands vocabulary feature, not useful for your models
-            checkpointURL,
-            metadataURL);
-
-        // check that model and metadata are loaded via HTTPS requests.
-        console.log("model+++++2")
-        await recognizer.ensureModelLoaded();
-        console.log("model+++++3")
-        return recognizer;
-    }
+//     async function createModel() {
+//         const checkpointURL = URL + "model.json"; // model topology
+//         const metadataURL = URL + "metadata.json"; // model metadata
+// console.log("model+++++")
+//         const recognizer = speech.create(
+//             "BROWSER_FFT", // fourier transform type, not useful to change
+//             undefined, // speech commands vocabulary feature, not useful for your models
+//             checkpointURL,
+//             metadataURL);
+//
+//         // check that model and metadata are loaded via HTTPS requests.
+//         console.log("model+++++2")
+//         await recognizer.ensureModelLoaded();
+//         console.log("model+++++3")
+//         return recognizer;
+//     }
 
 
     async function goTo(countryName, points, type, pgroup) {
@@ -376,18 +531,29 @@ let sound = new Audio(transitionSound)
 
         console.log("am========",countryElement);
         let selectedPointIndex  = pointsPositionsCopy.findIndex(pt => pt.id === type)
-        pointsPositionsCopy[selectedPointIndex] = { ...pointsPositionsCopy[selectedPointIndex],
-            top: countryElement.top - board.top ,
-            left:countryElement.width
-        }
+
+
+
+
+
         console.log("bug2",board.top - countryElement.top, board.left - countryElement.left);
-        setPointsPositions(pointsPositionsCopy)
+
 
 
         let countriesCopy  = [...countries]
         let sortedCountriesData = [...sortedCountrties]
         let indexInSorted = sortedCountriesData.findIndex(c => c.name === countryName)
         let selectedCountry = {...sortedCountriesData[indexInSorted], position: {...sortedCountriesData[indexInSorted].position}}
+
+            pointsPositionsCopy[selectedPointIndex] = { ...pointsPositionsCopy[selectedPointIndex],
+                top: countryElement.top - board.top ,
+                left: (countryElement.left - board.left) + countryElement.width,
+                currentCountryId:selectedCountry.id
+            }
+            setPointsPositions(pointsPositionsCopy)
+
+
+
         setSelectedCountry(selectedCountry.id)
       setTimeout(()=>{
             console.log("timeout ----")
@@ -405,15 +571,19 @@ let sound = new Audio(transitionSound)
 
              countryElement = document.getElementById(countryName).getBoundingClientRect()
             board = document.getElementById('board').getBoundingClientRect()
-            let selectedPointIndex  = pointsPositionsCopy.findIndex(pt => pt.id === type)
 
+
+            let newPositionForPoint =   sortedCountriesData[indexInSorted].position
+
+            console.log("pgroup==================",pointsPositionsCopy);
+            let selectedPointIndex  = pointsPositionsCopy.findIndex(pt => pt.id === type)
             pointsPositionsCopy[selectedPointIndex] = { ...pointsPositionsCopy[selectedPointIndex],
-                ...sortedCountriesData[indexInSorted].position
+              top: newPositionForPoint.top, left: newPositionForPoint.left+countryElement.width
             }
             console.log("***",pointsPositionsCopy, type, selectedPointIndex)
 
             console.log("bug-------------",countryElement.top - board.top ,countryElement.left - board.left, pointsPositionsCopy);
-            setPointsPositions(pointsPositionsCopy)
+
 
 
 
@@ -428,6 +598,32 @@ let sound = new Audio(transitionSound)
                 resolve(pointsPositionsCopy)
             }
             sortedCountriesData = sortedCountriesData.sort(compare)
+            let b = [...sortedCountriesData]
+             let selectedCountryAfterSort = sortedCountriesData.findIndex(cNt => cNt.id === selectedCountry.id)
+
+            console.log("___norm",sortedCountriesData, selectedCountryAfterSort, b);
+
+            // normalize
+
+            for (let i = 0; i < selectedCountryAfterSort; i++ ) {
+                if (sortedCountriesData[i].points === selectedCountry.points ) {
+                    let temp = {...sortedCountriesData[i]}
+                    console.log("_____________",temp);
+                    sortedCountriesData[i] = {...selectedCountry,
+                        position: {
+                        top: temp.position.top,
+                            left: temp.position.left
+                    }
+
+                    }
+
+                    sortedCountriesData[selectedCountryAfterSort] = {...temp, position: {...selectedCountry.position}}
+               break;
+                }
+            }
+
+
+
             let topSizeFirst = 0
             let topSizeSecond = 0
             let leftSizeFirst = 0
@@ -435,25 +631,45 @@ let sound = new Audio(transitionSound)
             for (let i = 0 ; i < sortedCountriesData.length ; i++) {
                 let c = sortedCountriesData[i]
                 c.position = {}
+                let currentTop = 0
+                let currentLeft = 0
                 if(i<=Math.floor(sortedCountriesData.length/2)) {
                     c.position.top = topSizeFirst
                     c.position.left = leftSizeFirst
+                     currentTop = topSizeFirst
+                    currentLeft = leftSizeFirst
                     topSizeFirst+=30
                 }else {
                     c.position.top = topSizeSecond
                     c.position.left = leftSizeSecond
                     topSizeSecond += 30
+
+                    currentTop = topSizeSecond
+                    currentLeft = leftSizeSecond
+                }
+
+
+
+
+
+                let selectedPointIndex  = pointsPositionsCopy.findIndex(pt => pt.currentCountryId === c.id)
+                pointsPositionsCopy[selectedPointIndex] = { ...pointsPositionsCopy[selectedPointIndex],
+                    top: currentTop, left: currentLeft + countryElement.width
                 }
             }
 
             let newData = []
             countriesCopy.forEach(itm => {
+                console.log("current name",itm.name);
                 let c = sortedCountriesData.find(cItem => cItem.name === itm.name)
+                console.log("c===bug",c,sortedCountriesData)
                 if (c.name === countryName) {
 
                 }
                 newData.push({...c})
             })
+
+            setPointsPositions(pointsPositionsCopy)
             setCountries([...newData])
             setSortedCountries(sortedCountriesData)
             console.log("???????????????????",pointsPositionsCopy);
@@ -475,11 +691,24 @@ console.log("end ----- goTo")
 
     }
 
+
+    function initPoints() {
+       setPointsPositions(pointsPositionsOriginal)
+    }
+
+    if (!SpeechRecognition.browserSupportsSpeechRecognition()) {
+        return (
+            <div className="mircophone-container">
+                Browser is not Support Speech Recognition.
+            </div>
+        );
+    }
+
     return (
         <div className={'main-page-voting'}>
             <div className={'main-page-voting-templete position-relative'}>
 
-<Button onClick={startVoting} className={'ml-4'}>Start voting</Button>
+<Button onClick={startingRecognizatation} className={'ml-4'}>Start voting</Button>
                 <div className={"board mx-auto"} id={"board"}>
                     {countries.map((c) => (
                         <div
@@ -524,15 +753,35 @@ console.log("end ----- goTo")
 
                 </Row>
                 <div id="label-container"></div>
-<h1 onClick={test}>test</h1>
-                {/*<h1>Voting table {haLfSize} | {haLfSize}</h1>*/}
-                {/*<h1 onClick={() => goTo("Albania", 12)}>12 to Albania</h1>*/}
-                {/*<h1 onClick={() => goTo("Sweden", 12)}>12 to Sweden</h1>*/}
-                {/*<h1 onClick={() => goTo("Germany", 12)}>12 to Germany</h1>*/}
-                {/*<h1 onClick={() => goTo("Italy", 12)}>12 to Italy</h1>*/}
-                {/*<h1 onClick={() => goTo("Armenia", 12)}>12 to Armenia</h1>*/}
-                {/*<h1 onClick={() => goTo("Greece", 12)}>12 to Greece</h1>*/}
-                {/*<h1 onClick={() => goTo("Georgia", 12)}>12 to Georgia</h1>*/}
+
+                <h1 onClick={initPoints} style={{color:'white'}}>Next Participate</h1>
+                <div className="microphone-wrapper">
+                    <div className="mircophone-container">
+                        <div
+                            className="microphone-icon-container"
+                            ref={microphoneRef}
+                            onClick={handleListing}
+                        >
+                           micro {/*<img src={microPhoneIcon} className="microphone-icon" />*/}
+                        </div>
+                        <div className="microphone-status">
+                            {isListening ? "Listening........." : "Click to start Listening"}
+                        </div>
+                        {isListening && (
+                            <button className="microphone-stop btn" onClick={stopHandle}>
+                                Stop
+                            </button>
+                        )}
+                    </div>
+                    {transcript && (
+                        <div className="microphone-result-container">
+                            <div className="microphone-result-text">{transcript}</div>
+                            <button className="microphone-reset btn" onClick={handleReset}>
+                                Reset
+                            </button>
+                        </div>
+                    )}
+                </div>
 
             </div>
         </div>
