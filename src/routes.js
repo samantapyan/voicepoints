@@ -2,6 +2,7 @@ import Home from "./pages/Home/Home.js"
 import VotingTable from "./pages/VotingTable/VotingTable.js"
 import Registration from "./pages/Registration/Registration";
 import PageNotFound from "./pages/PageNotFound/Pagenotfound";
+import GalaxyThree from "./pages/GalaxyThree/GalaxyThree";
 
 const routes = [
 
@@ -23,6 +24,11 @@ const routes = [
     {
         path: '/login',
         element: <Registration />,
+        exact:true
+    },
+    {
+        path: '/galaxy',
+        element: <GalaxyThree />,
         exact:true
     },
     {

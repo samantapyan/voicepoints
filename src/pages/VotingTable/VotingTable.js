@@ -2,19 +2,22 @@ import { Button, Table } from 'react-bootstrap';
 import './style.scss'
 import {useEffect, useState, useRef} from "react";
 import transitionSound from './../../sounds/points_go.wav'
+import nextIcon from './../../media/icons/next.png'
 import {Row} from 'react-bootstrap'
 import firebase from "./../../services/firebase"
 import pointBack from "./../../media/backgrounds/points-back.svg"
 import * as speech from "@tensorflow-models/speech-commands";
 import React from "react";
 import SpeechRecognition, { useSpeechRecognition } from "react-speech-recognition";
-
+import GalaxyCanvas from './../GalaxyThree/GalaxyThree'
 
 function VotingTable() {
     // const URL = "https://teachablemachine.withgoogle.com/models/3cCfdVsTm/"
     const { transcript, resetTranscript } = useSpeechRecognition();
     const [isListening, setIsListening] = useState(false);
     const microphoneRef = useRef(null);
+    const [showJuryName, setShowJuryName] = useState(false)
+    const [liveColor, setLiveColor] = useState(Math.floor(Math.random()*16777215).toString(16))
     const [speechData, setSpeechData] = useState("")
 
 
@@ -27,11 +30,11 @@ function VotingTable() {
         Germany: ["germany"],
         Georgia : [ "georgia" ],
         Ireland : ["ireland"],
-        Italy : ["italy"],
-        Khazakhstan : ["kazakhstan"],
+        Italy : ["italy", "Eataly"],
+        Kazakhstan : ["kazakhstan"],
         Malta : ["malta"],
-        Netherlands : ["netherlands"],
-        NorthMacedonia : ["north macedonia", "macedonia"],
+        Netherlands : ["netherlands", "the netherlands"],
+        Macedonia : ["north macedonia", "macedonia"],
         Poland : ["poland"],
         Portugal : ["portugal"],
         Russia : ["russia"],
@@ -75,16 +78,23 @@ function VotingTable() {
         // }
 
 
+        setLiveColor(Math.floor(Math.random()*16777215).toString(16))
+
+
 
         if (transcript && transcript.includes("12 points") || transcript.includes("12 point") || transcript.includes("twelve point")) {
             setSelectedPoint("high")
             resetTranscript();
+            setIsLive(false)
+
         }
 
         if (transcript && transcript.includes("10 points") || transcript.includes("10 point") || transcript.includes("ten point")) {
             console.log("10 points is")
             setSelectedPoint("middle")
             resetTranscript();
+            setIsLive(false)
+
         }
 
 
@@ -92,6 +102,8 @@ function VotingTable() {
             console.log("8 points is")
             setSelectedPoint("small")
             resetTranscript();
+            setIsLive(false)
+
         }
 
         for (let country in countryLibrary) {
@@ -110,6 +122,8 @@ function VotingTable() {
                 if (selectedPointD) {
                     resetTranscript();
                     pointsGive(country, p.value, selectedPointD.id,pointsPositions)
+                    setIsLive(false)
+
                 }
 
             }
@@ -194,60 +208,31 @@ function VotingTable() {
     const [secondHalfLeft, setSecondHalfLeft] = useState(0)
     const [selectedCountry, setSelectedCountry] = useState(false)
     const [pointsPositions, setPointsPositions] = useState(false)
+    const [isLive, setIsLive] = useState(false)
+    const [allJuries, setAllJuries] = useState([])
     const [pointsPositionsOriginal, setPointsPositionsOriginal] =useState(false)
     const [action, setAction] = useState(null)
-
-    useEffect(()=>{
-
-    },[])
+const [currentJuryId, setCurrentJuryId] = useState('')
 
 
-    // useEffect(()=>{
-    //
-    //     console.log("action - ",action)
-    //     if (action === "pointsTwelve") {
-    //         setSelectedPoint("high")
-    //     }
-    //     if (action === "pointsTen") {
-    //         setSelectedPoint("middle")
-    //     }
-    //     if (action === "pointsEight") {
-    //         setSelectedPoint("small")
-    //     }
-    //     if (action === "Armenia" && selectedPoint) {
-    //         console.log("Armenia",pointsPositions)
-    //         let selectedPointD =  pointsPositions.find(el => el.id === selectedPoint )
-    //         if (selectedPointD) {
-    //             pointsGive("Armenia", 12, selectedPointD.id,pointsPositions)
-    //         }
-    //
-    //     }
-    //     if (action === "Malta" && selectedPoint) {
-    //         console.log("Malta",pointsPositions)
-    //         let selectedPointD =  pointsPositions.find(el => el.id === selectedPoint )
-    //         if (selectedPointD) {
-    //             pointsGive("Malta", 12, selectedPointD.id,pointsPositions)
-    //         }
-    //
-    //     }
-    //     if (action === "Poland" && selectedPoint) {
-    //         console.log("Poland",pointsPositions)
-    //         let selectedPointD =  pointsPositions.find(el => el.id === selectedPoint )
-    //         if (selectedPointD) {
-    //             pointsGive("Poland", 12, selectedPointD.id,pointsPositions)
-    //         }
-    //
-    //     }
-    //     if (action === "Germany" && selectedPoint) {
-    //         console.log("Germany",pointsPositions)
-    //         let selectedPointD =  pointsPositions.find(el => el.id === selectedPoint )
-    //         if (selectedPointD) {
-    //             pointsGive("Germany", 12, selectedPointD.id,pointsPositions)
-    //         }
-    //
-    //     }
-    //
-    // }, [action])
+    function compareTime(a, b) {
+        console.log(a.time > b.time);
+        if (
+            a.hasOwnProperty("time") &&
+            b.hasOwnProperty("time") &&
+            a.time < b.time
+        ) {
+            return -1;
+        }
+        if (
+            a.hasOwnProperty("time") &&
+            b.hasOwnProperty("time") &&
+            a.time > b.time
+        ) {
+            return 1;
+        }
+        return 0;
+    }
 
 
     function compare(a, b) {
@@ -270,7 +255,7 @@ function VotingTable() {
     }
 
     useEffect(()=>{
-
+        getAllJuries()
         setTimeout(()=>{
 
             firebase.getAllCountries((all) => {
@@ -303,11 +288,11 @@ function VotingTable() {
                 sortedArray = sortedArray.sort(compare)
                 setSortedCountries(sortedArray)
 
-                let topFirstHalf = 0
-                let leftFirstHalf = 0
+                let topFirstHalf = 40
+                let leftFirstHalf = 50
 
-                let topSecondHalf = 0
-                let leftSecondHalf = am.width + 30
+                let topSecondHalf = 40
+                let leftSecondHalf = am.width + 75
                 setSecondHalfLeft(leftSecondHalf)
 
                 for (let i = 0 ; i < sortedArray.length ; i++) {
@@ -357,35 +342,38 @@ function VotingTable() {
             );
         }
 
+    }
 
 
-        // const speechGlobal =  window.webkitSpeechRecognition
-        //
-        // const  recognition = new speechGlobal();
-        // console.log("global", recognition)
-        // recognition.start();
-        // recognition.addEventListener("result", (e) => {
-        //     console.log("e==",e)
-        //     const text = Array.from(e.results)
-        //         .map((result) => result[0])
-        //         .map((result) => result.transcript)
-        //         .join("");
-        //
-        //     console.log("data is" )
-        //     if (e.results[0].isFinal) {
-        //       console.log("data is",text )
-        //
-        //
-        //     }
-        // });
-        //
-        // recognition.addEventListener("end", () => {
-        //     recognition.start();
-        // });
+    function getAllJuries() {
+        console.log("our juries --- --- ---");
+        firebase.getAllJuries((juries => {
+            console.log("our juries are",juries);
+            let all = juries.sort(compareTime)
+            setAllJuries(all)
+            console.log("our juries are", all);
+            if (all && all.length) {
 
+                if ( localStorage.getItem('juryTimeId')) {
 
+                    let indexJury  = all.findIndex(j => j.time === Number(localStorage.getItem('juryTimeId')))
+                    if (indexJury !== -1) {
+                        console.log("index jury =",indexJury);
+                         if (indexJury + 1 < all.length) {
+                             initPoints(all[indexJury+1].firstName + ' ' + all[indexJury + 1].lastName)
+                             localStorage.setItem('juryTimeId', all[indexJury+1].time);
+                             setCurrentJuryId(all[indexJury+1].time)
+                         }
 
+                    }
 
+                } else {
+                    localStorage.setItem('juryTimeId', all[0].time);
+                    initPoints(all[0].firstName + ' ' + all[0].lastName)
+                    setCurrentJuryId(all[0].time)
+                }
+            }
+        }))
     }
 
 
@@ -621,12 +609,16 @@ let sound = new Audio(transitionSound)
                break;
                 }
             }
+            //
+            // let topFirstHalf = 20
+            // let leftFirstHalf = 50
+            //
+            // let topSecondHalf = 20
+            // let leftSecondHalf = am.width + 75
 
-
-
-            let topSizeFirst = 0
-            let topSizeSecond = 0
-            let leftSizeFirst = 0
+            let topSizeFirst = 40
+            let topSizeSecond = 40
+            let leftSizeFirst = 50
             let leftSizeSecond = secondHalfLeft
             for (let i = 0 ; i < sortedCountriesData.length ; i++) {
                 let c = sortedCountriesData[i]
@@ -692,7 +684,54 @@ console.log("end ----- goTo")
     }
 
 
-    function initPoints() {
+    function initPoints(nameFull = '') {
+        let  allJuriesData = [...allJuries]
+        let currentJuryIdData = currentJuryId
+if (allJuriesData.length === 0) {
+    return
+}
+
+     if (currentJuryIdData) {
+         let itemJuryIndex = allJuriesData.findIndex(jury => jury.time === currentJuryIdData)
+
+
+        if (itemJuryIndex !== -1  && allJuriesData.length-1 === itemJuryIndex) {
+            console.log("LAST -----")
+            //VOTING IS END
+            return
+        } else if (allJuriesData.length > 2 && Math.ceil((allJuriesData.length-1) / 2 ) === itemJuryIndex+1){
+            //half voring
+            console.log("HALF -----")
+        }
+     }
+
+
+
+       if (currentJuryIdData) {
+           let nextJuryIndex = allJuriesData.findIndex(j => j.time === currentJuryIdData)
+
+           console.log("current jury item",currentJuryId);
+           console.log("next jury index =",nextJuryIndex, allJuriesData);
+           if (nextJuryIndex !== -1  && (nextJuryIndex+1) < allJuriesData.length){
+               nameFull = allJuriesData[nextJuryIndex+1].firstName + ' ' +allJuriesData[nextJuryIndex+1].lastName
+               localStorage.setItem('juryTimeId', allJuriesData[nextJuryIndex+1].time);
+               setCurrentJuryId(allJuriesData[nextJuryIndex+1].time)
+           }
+       }
+
+
+        console.log("name___full",nameFull);
+        if (nameFull) {
+            setTimeout(()=>{
+                setShowJuryName(nameFull)
+            },100)
+            setTimeout(()=>{
+                setShowJuryName(false)
+            },2000)
+        }
+
+
+
        setPointsPositions(pointsPositionsOriginal)
     }
 
@@ -706,10 +745,18 @@ console.log("end ----- goTo")
 
     return (
         <div className={'main-page-voting'}>
-            <div className={'main-page-voting-templete position-relative'}>
 
-<Button onClick={startingRecognizatation} className={'ml-4'}>Start voting</Button>
+            {showJuryName && <div className={'next-jury'}>Jury is {showJuryName}</div>}
+            <div className={'main-page-voting-templete position-relative'}>
+                <GalaxyCanvas> </GalaxyCanvas>
+<div  className={'ml-4'}      ref={microphoneRef}
+     onClick={handleListing}>Start voting</div>
                 <div className={"board mx-auto"} id={"board"}>
+                    <div className={'d-flex justify-content-end'} >
+                        <div className={'text-right next-country cursor-pointer'} onClick={initPoints}>
+                            Next<span className={"next-icon"}><img src={nextIcon} alt=""/></span>
+                        </div>
+                    </div>
                     {countries.map((c) => (
                         <div
                             style={{
@@ -737,13 +784,16 @@ console.log("end ----- goTo")
                     ))}
                     {pointsData.map(p => (
                         <div className={'mr-2'}>
-                            <div onClick={() => goTo("Italy", 12)}
+                            <div
                                  style={{top:pointsPositions.length && pointsPositions.find(pnt => pnt.id === p.id) && pointsPositions.find(pnt => pnt.id === p.id).top || '0',
                                      left:pointsPositions.length && pointsPositions.find(pnt => pnt.id === p.id) && pointsPositions.find(pnt => pnt.id === p.id).left || '0',
                                  }}
                                  className={`point display-flex d-flex justify-content-center align-items-center position-absolute ${selectedPoint && p.id === selectedPoint ? "selected-point" : ''  }` } >{p.value}</div>
                         </div>
                     ))}
+
+
+
                 </div>
                 <Row className="points justify-content-center">
 
@@ -752,38 +802,12 @@ console.log("end ----- goTo")
 
 
                 </Row>
-                <div id="label-container"></div>
 
-                <h1 onClick={initPoints} style={{color:'white'}}>Next Participate</h1>
-                <div className="microphone-wrapper">
-                    <div className="mircophone-container">
-                        <div
-                            className="microphone-icon-container"
-                            ref={microphoneRef}
-                            onClick={handleListing}
-                        >
-                           micro {/*<img src={microPhoneIcon} className="microphone-icon" />*/}
-                        </div>
-                        <div className="microphone-status">
-                            {isListening ? "Listening........." : "Click to start Listening"}
-                        </div>
-                        {isListening && (
-                            <button className="microphone-stop btn" onClick={stopHandle}>
-                                Stop
-                            </button>
-                        )}
-                    </div>
-                    {transcript && (
-                        <div className="microphone-result-container">
-                            <div className="microphone-result-text">{transcript}</div>
-                            <button className="microphone-reset btn" onClick={handleReset}>
-                                Reset
-                            </button>
-                        </div>
-                    )}
-                </div>
+
+
 
             </div>
+            <div style={{color: `#${liveColor}`}} className={'text-right m-4'}>Live </div>
         </div>
 
     );

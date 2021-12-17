@@ -97,7 +97,7 @@ const [pageType, setPageType] = useState('')
                 console.log("reg ok uid=", r.user.uid)
 
                 dispatch(setUser({email:r.user.email}))
-                firebase.addUser({email:r.user.email, uid:r.user.uid,...data},r => {
+                firebase.addUser({email:r.user.email, uid:r.user.uid,type:"user", ...data},r => {
                     console.log("user added successfuly",r)
                 })
                 firebase.auth.signInWithEmailAndPassword(email, password).then(data =>{

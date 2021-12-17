@@ -2,9 +2,12 @@ import React, {useEffect, useState, useRef} from 'react'
 import './style.scss';
 import {Link} from "react-router-dom";
 import * as ReactBootstrap from 'react-bootstrap'
+import RegistrationJury from "./../RegistrationJury/RegistrationJury"
 import {useDispatch, useSelector} from "react-redux";
+import { Button } from 'react-bootstrap';
 import voice from './../../media/backgrounds/voice.svg'
 import host from './../../media/backgrounds/host.png'
+import HeaderApp from "../HeaderApp/HeaderApp";
 
 // import {Link} from 'react-router-dom'
 const Row = ReactBootstrap.Row;
@@ -16,6 +19,8 @@ const Home = () => {
 
     return (
         <div className="App">
+            <HeaderApp/>
+
             <div className={'home-banner-1'}>
                 <Container>
                     <span className={'home-banner-1-main-word font-weight-bold pr-4'}>Voice</span>
@@ -23,7 +28,12 @@ const Home = () => {
                 </Container>
             </div>
             <div className={'home-banner-add'}>
-
+                <div>
+                    {activeUser && activeUser.type === "admin" && (
+                        <Button>OFF Registration</Button>
+                    )}
+                </div>
+                <RegistrationJury/>
 
             </div>
 

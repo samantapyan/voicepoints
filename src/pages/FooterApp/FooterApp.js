@@ -16,18 +16,20 @@ const FooterApp = () => {
 
 
     return (
+<div>
+    {/*<Card className="text-center footer-app">*/}
+        {/*<Card.Header  className='footer-app-text'> <Card.Title >Special For Eurovision fans</Card.Title></Card.Header>*/}
+        {/*<Card.Body>*/}
 
-            <Card className="text-center footer-app">
-           <Card.Header  className='footer-app-text'> <Card.Title >Special For Eurovision fans</Card.Title></Card.Header>
-            <Card.Body>
+            {/*<Card.Text className={'footer-app-text'}>*/}
+                {/*With supporting text below as a natural lead-in to additional content.*/}
+            {/*</Card.Text>*/}
+            {/*/!*<Button variant="primary">Go somewhere</Button>*!/*/}
+        {/*</Card.Body>*/}
+        {/*<Card.Footer className="text-muted">&copy; Copyright | All rigths are reserved</Card.Footer>*/}
+    {/*</Card>*/}
+</div>
 
-                <Card.Text className={'footer-app-text'}>
-                    With supporting text below as a natural lead-in to additional content.
-                </Card.Text>
-                {/*<Button variant="primary">Go somewhere</Button>*/}
-            </Card.Body>
-            <Card.Footer className="text-muted">&copy; Copyright | All rigths are reserved</Card.Footer>
-</Card>
 
     );
 }

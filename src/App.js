@@ -7,7 +7,7 @@ import Registration from "./pages/Registration/Registration";
 import { setUser } from "./store/slices/UserSlice.js";
 import firebase from "./services/firebase"
 import {useDispatch, useSelector} from "react-redux";
-import HeaderApp from './pages/HeaderApp/HeaderApp'
+// import HeaderApp from './pages/HeaderApp/HeaderApp'
 import FooterApp from './pages/FooterApp/FooterApp'
 
 import React, {useEffect, useState} from 'react'
@@ -72,7 +72,7 @@ setTimeout(()=>{
 <>
     {isReady && (
         <>
-            <HeaderApp/>
+
             <Routes>
                 {routes.map((route, ind) => (
                     <Route {...route} key={ind}/>

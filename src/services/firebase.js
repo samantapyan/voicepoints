@@ -62,6 +62,27 @@ class FirebaseService {
        callback(firebase.auth().currentUser)
     }
 
+    addJury = (data, callback) =>{
+        this.db
+            .collection('juries')
+            .doc(data.docId)
+            .set(data)
+            .then(querySnapshot => {
+                callback(true)
+            })
+    }
+    getAllJuries = (callback) =>{
+        let result = []
+        this.db
+            .collection('juries')
+            .get()
+            .then(querySnapshot => {
+                querySnapshot.forEach(d => {
+                    result.push(d.data())
+                })
+                callback(result)
+            })
+    }
 }
 
 const Instance = new FirebaseService();
