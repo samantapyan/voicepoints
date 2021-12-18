@@ -12,9 +12,9 @@
   width: 100%;
   overflow-y: auto;
   place-items: center;
-  background: -webkit-linear-gradient(left, #341d42, #181571);
+  background:-webkit-linear-gradient(left, #010038, #181571);
   ::selection{
-    background: -webkit-linear-gradient(left, #341d42, #181571);
+    background:-webkit-linear-gradient(left, #010038, #181571);
     color: #fff;
   }
   .registration-tab {
@@ -78,7 +78,7 @@
     left: 0;
     z-index: 0;
     border-radius: 5px;
-    background: -webkit-linear-gradient(left, #341d42, #181571);
+    background: -webkit-linear-gradient(left, #010038, #181571);
 
     transition: all 0.6s cubic-bezier(0.68,-0.55,0.265,1.55);
   }
@@ -170,7 +170,7 @@
     width: 300%;
     position: absolute;
     left: -100%;
-    background: -webkit-linear-gradient(left, #341d42, #181571);
+    background: -webkit-linear-gradient(left, #010038, #181571);
 
     border-radius: 5px;
     transition: all 0.4s ease;;

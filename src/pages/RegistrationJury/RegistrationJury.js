@@ -130,9 +130,7 @@ firebase.addJury({...data, time}, () => {
 
                                 <div className={'mt-4'}>
                                     <Button  type={'submit'} >
-
-                                        {pageType === "registration" ? "Register" : "Login"}
-
+                                        Register
                                     </Button>
 
                                 </div>

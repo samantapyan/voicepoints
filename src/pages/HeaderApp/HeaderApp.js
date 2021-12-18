@@ -24,10 +24,14 @@ const HeaderApp = () => {
                         <div>
                             {activeUser?.email || ""}
                         </div>
-                           <div className={'d-flex justify-content-end cursor-pointer '}>
+
+                        {activeUser?.email && (
+                            <div className={'d-flex justify-content-end cursor-pointer '}>
                                 <div style={{width:'20px', height: "20px"}} className="mr-3"><img src={svgLogout} alt=""/></div>
                                 <div>Log out</div>
-                           </div>
+                            </div>
+                        )}
+
                     </Col>
                 </Row>
         </div>

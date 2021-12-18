@@ -83,6 +83,15 @@ class FirebaseService {
                 callback(result)
             })
     }
+    storeCountryData = (data,callback) => {
+        this.db
+            .collection('countries')
+            .doc(data.docId)
+            .set(data)
+            .then(querySnapshot => {
+                callback(true)
+            })
+    }
 }
 
 const Instance = new FirebaseService();

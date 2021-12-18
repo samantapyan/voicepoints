@@ -31,7 +31,6 @@ function App() {
 
 
             firebase.auth.onAuthStateChanged(function(user) {
-                console.log("user=111", user.uid)
                 if (user) {
                     dispatch(setUser(
                         {

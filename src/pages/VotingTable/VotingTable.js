@@ -2,6 +2,8 @@ import { Button, Table } from 'react-bootstrap';
 import './style.scss'
 import {useEffect, useState, useRef} from "react";
 import transitionSound from './../../sounds/points_go.wav'
+import backgroundSound from './../../sounds/simulation.mp3'
+
 import nextIcon from './../../media/icons/next.png'
 import {Row} from 'react-bootstrap'
 import firebase from "./../../services/firebase"
@@ -30,7 +32,7 @@ function VotingTable() {
         Germany: ["germany"],
         Georgia : [ "georgia" ],
         Ireland : ["ireland"],
-        Italy : ["italy", "Eataly"],
+        Italy : ["italy", "eataly", "eataly"],
         Kazakhstan : ["kazakhstan"],
         Malta : ["malta"],
         Netherlands : ["netherlands", "the netherlands"],
@@ -57,6 +59,7 @@ function VotingTable() {
             value:8,
             id: "small"
         }
+
     ]
 
     useEffect(()=>{
@@ -105,6 +108,23 @@ function VotingTable() {
             setIsLive(false)
 
         }
+
+        if (transcript && transcript.includes("6 points") || transcript.includes("six point") || transcript.includes("6 point") ) {
+            console.log("6 points is")
+            setSelectedPoint("smallest")
+            resetTranscript();
+            setIsLive(false)
+
+        }
+
+        if (transcript && transcript.includes("4 points") || transcript.includes("four point") || transcript.includes("for point") || transcript.includes("for points") ) {
+            console.log("4 points is")
+            setSelectedPoint("extraSmallest")
+            resetTranscript();
+            setIsLive(false)
+
+        }
+
 
         for (let country in countryLibrary) {
             // ["albania", "albania"]
@@ -210,6 +230,7 @@ function VotingTable() {
     const [pointsPositions, setPointsPositions] = useState(false)
     const [isLive, setIsLive] = useState(false)
     const [allJuries, setAllJuries] = useState([])
+    const [currentJuryNumber, setCurrentJuryNumber] = useState(0)
     const [pointsPositionsOriginal, setPointsPositionsOriginal] =useState(false)
     const [action, setAction] = useState(null)
 const [currentJuryId, setCurrentJuryId] = useState('')
@@ -253,6 +274,50 @@ const [currentJuryId, setCurrentJuryId] = useState('')
         }
         return 0;
     }
+
+
+    function compareEqual(a, b, point) {
+        console.log(a.points > b.points);
+        if (
+            a.hasOwnProperty("points") &&
+            b.hasOwnProperty("points") &&
+            a.points > b.points
+        ) {
+            return -1;
+        }
+        if (
+            a.hasOwnProperty("points") &&
+            b.hasOwnProperty("points") && a.points === point &&
+            a.points < b.points
+        ) {
+            return 1;
+        }
+        return 0;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     useEffect(()=>{
         getAllJuries()
@@ -353,24 +418,48 @@ const [currentJuryId, setCurrentJuryId] = useState('')
             setAllJuries(all)
             console.log("our juries are", all);
             if (all && all.length) {
-
-                if ( localStorage.getItem('juryTimeId')) {
+            let storageId = localStorage.getItem('juryTimeId')
+                let numberJury = currentJuryNumber
+                if (storageId) {
 
                     let indexJury  = all.findIndex(j => j.time === Number(localStorage.getItem('juryTimeId')))
                     if (indexJury !== -1) {
                         console.log("index jury =",indexJury);
+
                          if (indexJury + 1 < all.length) {
-                             initPoints(all[indexJury+1].firstName + ' ' + all[indexJury + 1].lastName)
+                             setCurrentJuryNumber(numberJury+1)
+
+                             // initPoints(all[indexJury+1].firstName + ' ' + all[indexJury + 1].lastName, true)
                              localStorage.setItem('juryTimeId', all[indexJury+1].time);
                              setCurrentJuryId(all[indexJury+1].time)
+
+                             setTimeout(()=>{
+                                 setShowJuryName(all[indexJury+1].firstName + ' ' + all[indexJury + 1].lastName)
+                             },100)
+                             setTimeout(()=>{
+                                 setShowJuryName(false)
+                             },4200)
+                         } else {
+                             // last Item
+                             setCurrentJuryId(storageId)
                          }
 
                     }
 
                 } else {
                     localStorage.setItem('juryTimeId', all[0].time);
-                    initPoints(all[0].firstName + ' ' + all[0].lastName)
+                    // initPoints(all[0].firstName + ' ' + all[0].lastName, true)
                     setCurrentJuryId(all[0].time)
+                    setCurrentJuryNumber(numberJury+1)
+                    setTimeout(()=>{
+                        setShowJuryName(all[0].firstName + ' ' + all[0].lastName)
+                    },100)
+                    setTimeout(()=>{
+                        setShowJuryName(false)
+                    },4200)
+
+
+
                 }
             }
         }))
@@ -380,6 +469,8 @@ const [currentJuryId, setCurrentJuryId] = useState('')
 
     const handleListing = () => {
         setIsListening(true);
+        let backSound = new Audio('https://firebasestorage.googleapis.com/v0/b/voicepoints-c0a52.appspot.com/o/sounds%2Fsimulation.mp3?alt=media&token=aaa4f88e-887b-41c6-8eb3-3c16d0a9b1e0')
+        backSound.play()
         microphoneRef.current.classList.add("listening");
         SpeechRecognition.startListening({
             continuous: true,
@@ -406,6 +497,20 @@ const [currentJuryId, setCurrentJuryId] = useState('')
             },100)
         })
 }
+
+
+function findLastItemIndex(arr,property, value, ownIndex) {
+     let index = -1
+    arr.forEach((itm, i) => {
+
+        if (itm.points === value && i !== ownIndex) {
+            index = i
+        }
+
+    })
+    return index
+}
+
 
     // async function startVoting(){
     //
@@ -508,7 +613,7 @@ const [currentJuryId, setCurrentJuryId] = useState('')
 
         console.log("params===", countryName, points, type, pgroup);
         let pointsPositionsCopy = [...pgroup]
-let sound = new Audio(transitionSound)
+let sound = new Audio('https://firebasestorage.googleapis.com/v0/b/voicepoints-c0a52.appspot.com/o/sounds%2Fpoints_go.wav?alt=media&token=97a912fc-69d2-4b85-9e7b-50094f0f404e')
         sound.play();
         console.log("sound===",sound);
 
@@ -566,8 +671,14 @@ let sound = new Audio(transitionSound)
             console.log("pgroup==================",pointsPositionsCopy);
             let selectedPointIndex  = pointsPositionsCopy.findIndex(pt => pt.id === type)
             pointsPositionsCopy[selectedPointIndex] = { ...pointsPositionsCopy[selectedPointIndex],
-              top: newPositionForPoint.top, left: newPositionForPoint.left+countryElement.width
+              top: newPositionForPoint.top - board.top,
+                left: (newPositionForPoint.left - board.left) + newPositionForPoint.width,
             }
+
+
+
+
+
             console.log("***",pointsPositionsCopy, type, selectedPointIndex)
 
             console.log("bug-------------",countryElement.top - board.top ,countryElement.left - board.left, pointsPositionsCopy);
@@ -586,29 +697,101 @@ let sound = new Audio(transitionSound)
                 resolve(pointsPositionsCopy)
             }
             sortedCountriesData = sortedCountriesData.sort(compare)
-            let b = [...sortedCountriesData]
+
+
+           let indexInSortedNow = sortedCountriesData.findIndex(elem => elem.id === selectedCountry.id)
+            let firstEqualItem = sortedCountriesData.findIndex(el => ((el.points === selectedCountry.points) && (el.id !== selectedCountry.id)))
+console.log("brb index in sorted", indexInSortedNow)
+
+            console.log("brb FIRT EQUAL INDEX =", firstEqualItem)
+            if (firstEqualItem !== -1) {
+                let indexOfLast = findLastItemIndex(sortedCountrties,"points", selectedCountry.points, indexInSorted)
+                console.log("brb LAST index",indexOfLast);
+
+                if (indexOfLast === firstEqualItem) {
+                    let temp = {...sortedCountriesData[firstEqualItem]}
+                    sortedCountriesData[firstEqualItem] ={...selectedCountry, position : {
+                        top: temp.top,
+                            left: temp.left
+                        }}
+                    sortedCountriesData[indexInSortedNow] = {...temp, position : {
+                            top: selectedCountry.position.top,
+                            left: selectedCountry.position.left
+                        }}
+                } else {
+                    // firstEqualItem indexOfLast
+console.log("MALENA", indexOfLast , firstEqualItem, [...sortedCountriesData])
+                    let lastItem = ''
+                    let temp = ''
+                    for (let i= indexOfLast; i>=firstEqualItem; i--) {
+                        console.log("EQUAL INTERVAL",sortedCountriesData[i]);
+                        if (i === indexOfLast) {
+                            lastItem = sortedCountriesData[i]
+                        }
+                        if (i === firstEqualItem) {
+                            sortedCountriesData[i] = {...sortedCountriesData[indexInSortedNow], position : {
+                                    top: lastItem.position.top,
+                                    left: lastItem.position.left
+                                }}
+
+                            sortedCountriesData[indexInSortedNow] = {...lastItem, position : {
+                                    top: sortedCountriesData[indexInSortedNow].position.top,
+                                    left: sortedCountriesData[indexInSortedNow].position.left
+                                }}
+                        }
+
+                        if (i !== firstEqualItem) {
+
+                            temp  = {...sortedCountriesData[i]}
+
+                            console.log("ppp", temp, i)
+
+                            sortedCountriesData[i] = {
+                                ...sortedCountriesData[i-1],
+                                position : {
+                                    top: temp.position.top,
+                                    left: temp.position.left
+                                }
+                            }
+                        }
+                    }
+
+
+                }
+            }
+
+
+                let b = [...sortedCountriesData]
              let selectedCountryAfterSort = sortedCountriesData.findIndex(cNt => cNt.id === selectedCountry.id)
 
             console.log("___norm",sortedCountriesData, selectedCountryAfterSort, b);
 
+
+
+            // has EQUAL
+
+
+
             // normalize
 
-            for (let i = 0; i < selectedCountryAfterSort; i++ ) {
-                if (sortedCountriesData[i].points === selectedCountry.points ) {
-                    let temp = {...sortedCountriesData[i]}
-                    console.log("_____________",temp);
-                    sortedCountriesData[i] = {...selectedCountry,
-                        position: {
-                        top: temp.position.top,
-                            left: temp.position.left
-                    }
+            /// only selected
 
-                    }
-
-                    sortedCountriesData[selectedCountryAfterSort] = {...temp, position: {...selectedCountry.position}}
-               break;
-                }
-            }
+            // for (let i = 0; i < selectedCountryAfterSort; i++ ) {
+            //     if (sortedCountriesData[i].points === selectedCountry.points  ) {
+            //         let temp = {...sortedCountriesData[i]}
+            //         console.log("_____________",temp);
+            //         sortedCountriesData[i] = {...selectedCountry,
+            //             position: {
+            //             top: temp.position.top,
+            //                 left: temp.position.left
+            //         }
+            //
+            //         }
+            //
+            //         sortedCountriesData[selectedCountryAfterSort] = {...temp, position: {...selectedCountry.position}}
+            //    break;
+            //     }
+            // }
             //
             // let topFirstHalf = 20
             // let leftFirstHalf = 50
@@ -620,33 +803,41 @@ let sound = new Audio(transitionSound)
             let topSizeSecond = 40
             let leftSizeFirst = 50
             let leftSizeSecond = secondHalfLeft
+            console.log("sorted LENGTH",sortedCountriesData.length);
+
+
             for (let i = 0 ; i < sortedCountriesData.length ; i++) {
                 let c = sortedCountriesData[i]
                 c.position = {}
                 let currentTop = 0
                 let currentLeft = 0
-                if(i<=Math.floor(sortedCountriesData.length/2)) {
+                if(i<Math.floor(sortedCountriesData.length/2)) {
+                    console.log("First HALF")
                     c.position.top = topSizeFirst
                     c.position.left = leftSizeFirst
                      currentTop = topSizeFirst
                     currentLeft = leftSizeFirst
                     topSizeFirst+=30
                 }else {
+                    console.log("Second HALF")
                     c.position.top = topSizeSecond
                     c.position.left = leftSizeSecond
-                    topSizeSecond += 30
-
                     currentTop = topSizeSecond
                     currentLeft = leftSizeSecond
+                    topSizeSecond += 30
                 }
 
 
 
-
+                // pointsPositionsCopy[selectedPointIndex] = { ...pointsPositionsCopy[selectedPointIndex],
+                //     top: newPositionForPoint.top - board.top,
+                //     left: (newPositionForPoint.left - board.left) + newPositionForPoint.width,
+                // }
 
                 let selectedPointIndex  = pointsPositionsCopy.findIndex(pt => pt.currentCountryId === c.id)
                 pointsPositionsCopy[selectedPointIndex] = { ...pointsPositionsCopy[selectedPointIndex],
-                    top: currentTop, left: currentLeft + countryElement.width
+                    top: currentTop,
+                    left: currentLeft + countryElement.width
                 }
             }
 
@@ -654,6 +845,7 @@ let sound = new Audio(transitionSound)
             countriesCopy.forEach(itm => {
                 console.log("current name",itm.name);
                 let c = sortedCountriesData.find(cItem => cItem.name === itm.name)
+                firebase.storeCountryData(c,()=> console.log("store", c.name))
                 console.log("c===bug",c,sortedCountriesData)
                 if (c.name === countryName) {
 
@@ -664,6 +856,8 @@ let sound = new Audio(transitionSound)
             setPointsPositions(pointsPositionsCopy)
             setCountries([...newData])
             setSortedCountries(sortedCountriesData)
+
+            console.log("sorted ===", sortedCountriesData)
             console.log("???????????????????",pointsPositionsCopy);
             resolve(pointsPositionsCopy)
 setSelectedCountry('')
@@ -672,6 +866,15 @@ setSelectedCountry('')
 
 console.log("end ----- goTo")
     })
+    }
+
+
+    function initAll() {
+     let all = sortedCountrties
+        sortedCountrties.map(data => {
+            firebase.storeCountryData({...data, points:0, position: {top:0, left:0}},()=>{})
+        })
+
     }
 
 
@@ -684,19 +887,31 @@ console.log("end ----- goTo")
     }
 
 
-    function initPoints(nameFull = '') {
+    function initPoints(nameFull = '', isFirst = false) {
+let number = currentJuryNumber
+
+     let trSound = new Audio( 'https://firebasestorage.googleapis.com/v0/b/voicepoints-c0a52.appspot.com/o/sounds%2FnewJury.mp3?alt=media&token=018dd29d-2334-4862-86b0-7734d3ac3be8')
+        trSound.play()
         let  allJuriesData = [...allJuries]
         let currentJuryIdData = currentJuryId
-if (allJuriesData.length === 0) {
-    return
-}
+
+        console.log("currentJury Data",currentJuryIdData);
+
+        if (allJuriesData.length === 0) {
+
+            return
+        }
 
      if (currentJuryIdData) {
-         let itemJuryIndex = allJuriesData.findIndex(jury => jury.time === currentJuryIdData)
+         let itemJuryIndex = allJuriesData.findIndex(jury => jury.time == currentJuryIdData)
+         console.log("?????????",itemJuryIndex,currentJuryIdData);
 
 
-        if (itemJuryIndex !== -1  && allJuriesData.length-1 === itemJuryIndex) {
+         if (itemJuryIndex !== -1  && allJuriesData.length-1 === itemJuryIndex) {
+             setCurrentJuryNumber(number+1)
             console.log("LAST -----")
+            setPointsPositions(pointsPositionsOriginal)
+            localStorage.removeItem('juryTimeId')
             //VOTING IS END
             return
         } else if (allJuriesData.length > 2 && Math.ceil((allJuriesData.length-1) / 2 ) === itemJuryIndex+1){
@@ -708,11 +923,12 @@ if (allJuriesData.length === 0) {
 
 
        if (currentJuryIdData) {
-           let nextJuryIndex = allJuriesData.findIndex(j => j.time === currentJuryIdData)
-
+           let nextJuryIndex = allJuriesData.findIndex(j => j.time == currentJuryIdData)
+           setCurrentJuryNumber(number+1)
            console.log("current jury item",currentJuryId);
            console.log("next jury index =",nextJuryIndex, allJuriesData);
            if (nextJuryIndex !== -1  && (nextJuryIndex+1) < allJuriesData.length){
+
                nameFull = allJuriesData[nextJuryIndex+1].firstName + ' ' +allJuriesData[nextJuryIndex+1].lastName
                localStorage.setItem('juryTimeId', allJuriesData[nextJuryIndex+1].time);
                setCurrentJuryId(allJuriesData[nextJuryIndex+1].time)
@@ -727,7 +943,7 @@ if (allJuriesData.length === 0) {
             },100)
             setTimeout(()=>{
                 setShowJuryName(false)
-            },2000)
+            },4200)
         }
 
 
@@ -750,10 +966,12 @@ if (allJuriesData.length === 0) {
             <div className={'main-page-voting-templete position-relative'}>
                 <GalaxyCanvas> </GalaxyCanvas>
 <div  className={'ml-4'}      ref={microphoneRef}
-     onClick={handleListing}>Start voting</div>
+     onClick={handleListing} style={{color:"white"}}>#voicePoints</div>
+
                 <div className={"board mx-auto"} id={"board"}>
-                    <div className={'d-flex justify-content-end'} >
-                        <div className={'text-right next-country cursor-pointer'} onClick={initPoints}>
+                    <div className={'d-flex ml-4 justify-content-between'} >
+                        <div style={{color:"white"}}>{currentJuryNumber}{currentJuryNumber === 1 && 'st'}{currentJuryNumber === 2 && 'nd'}{currentJuryNumber >=3 && 'th'} of {allJuries.length} juries</div>
+                        <div className={'text-right next-country cursor-pointer'} onClick={e => initPoints()}>
                             Next<span className={"next-icon"}><img src={nextIcon} alt=""/></span>
                         </div>
                     </div>

@@ -3,6 +3,7 @@ import VotingTable from "./pages/VotingTable/VotingTable.js"
 import Registration from "./pages/Registration/Registration";
 import PageNotFound from "./pages/PageNotFound/Pagenotfound";
 import GalaxyThree from "./pages/GalaxyThree/GalaxyThree";
+import AdminPanel from "./pages/AdminPanel/AdminPanel";
 
 const routes = [
 
