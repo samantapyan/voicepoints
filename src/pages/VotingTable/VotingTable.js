@@ -1,8 +1,8 @@
 import { Button, Table } from 'react-bootstrap';
 import './style.scss'
 import {useEffect, useState, useRef} from "react";
-import transitionSound from './../../sounds/points_go.wav'
-import backgroundSound from './../../sounds/simulation.mp3'
+// import transitionSound from './../../sounds/points_go.wav'
+// import backgroundSound from './../../sounds/simulation.mp3'
 
 import nextIcon from './../../media/icons/next.png'
 import {Row} from 'react-bootstrap'
@@ -135,7 +135,7 @@ function VotingTable() {
 
             if (isMatch) {
                 console.log("is match =", isMatch);
-                let selectedPointD =  pointsPositions.find(el => el.id === selectedPoint )
+                let selectedPointD =  pointsPositions && pointsPositions.find(el => el.id === selectedPoint )
                 console.log("sekected point ===", selectedPoint)
                 let p = pointsData.find(itm => itm.id === selectedPoint)
                 console.log("p =",p);
@@ -232,6 +232,13 @@ function VotingTable() {
     const [allJuries, setAllJuries] = useState([])
     const [currentJuryNumber, setCurrentJuryNumber] = useState(0)
     const [pointsPositionsOriginal, setPointsPositionsOriginal] =useState(false)
+    const [pointGoSound, setPointGoSound] = useState('')
+    const [showTopThreeValue, setShowTopThreeValue] = useState(false)
+    const [backgroundSound, setBackgroundSound] = useState('')
+    const [winingSong, setWiningSong] = useState('')
+
+
+
     const [action, setAction] = useState(null)
 const [currentJuryId, setCurrentJuryId] = useState('')
 
@@ -305,7 +312,15 @@ const [currentJuryId, setCurrentJuryId] = useState('')
 
 
 
+useEffect(() => {
+    let winingSongA = new Audio('https://firebasestorage.googleapis.com/v0/b/voicepoints-c0a52.appspot.com/o/sounds%2Fwinning.mp3?alt=media')
+    let pointGoSound = new Audio('https://firebasestorage.googleapis.com/v0/b/voicepoints-c0a52.appspot.com/o/sounds%2Fget_points.mp3?alt=media')
 
+    let backSound = new Audio('https://firebasestorage.googleapis.com/v0/b/voicepoints-c0a52.appspot.com/o/sounds%2Fsimulation.mp3?alt=media')
+    setBackgroundSound(backSound)
+    setPointGoSound(pointGoSound)
+    setWiningSong(winingSongA)
+},[])
 
 
 
@@ -419,7 +434,7 @@ const [currentJuryId, setCurrentJuryId] = useState('')
             console.log("our juries are", all);
             if (all && all.length) {
             let storageId = localStorage.getItem('juryTimeId')
-                let numberJury = currentJuryNumber
+                let numberJury = currentJuryNumber+1
                 if (storageId) {
 
                     let indexJury  = all.findIndex(j => j.time === Number(localStorage.getItem('juryTimeId')))
@@ -427,18 +442,27 @@ const [currentJuryId, setCurrentJuryId] = useState('')
                         console.log("index jury =",indexJury);
 
                          if (indexJury + 1 < all.length) {
-                             setCurrentJuryNumber(numberJury+1)
+                             setCurrentJuryNumber(numberJury)
 
                              // initPoints(all[indexJury+1].firstName + ' ' + all[indexJury + 1].lastName, true)
                              localStorage.setItem('juryTimeId', all[indexJury+1].time);
                              setCurrentJuryId(all[indexJury+1].time)
 
-                             setTimeout(()=>{
-                                 setShowJuryName(all[indexJury+1].firstName + ' ' + all[indexJury + 1].lastName)
-                             },100)
-                             setTimeout(()=>{
-                                 setShowJuryName(false)
-                             },4200)
+
+                            setTimeout(()=> {
+                                setTimeout(()=>{
+                                    setShowJuryName(all[indexJury+1].firstName + ' ' + all[indexJury + 1].lastName)
+                                },100)
+                                setTimeout(()=>{
+                                    setShowJuryName(false)
+                                },4200)
+                            },3000)
+
+
+
+
+
+
                          } else {
                              // last Item
                              setCurrentJuryId(storageId)
@@ -450,13 +474,17 @@ const [currentJuryId, setCurrentJuryId] = useState('')
                     localStorage.setItem('juryTimeId', all[0].time);
                     // initPoints(all[0].firstName + ' ' + all[0].lastName, true)
                     setCurrentJuryId(all[0].time)
-                    setCurrentJuryNumber(numberJury+1)
-                    setTimeout(()=>{
-                        setShowJuryName(all[0].firstName + ' ' + all[0].lastName)
-                    },100)
-                    setTimeout(()=>{
-                        setShowJuryName(false)
-                    },4200)
+                    setCurrentJuryNumber(numberJury)
+
+                  setTimeout(()=>{
+                      setTimeout(()=>{
+                          setShowJuryName(all[0].firstName + ' ' + all[0].lastName)
+                      },100)
+                      setTimeout(()=>{
+                          setShowJuryName(false)
+                      },4200)
+                  },5000)
+
 
 
 
@@ -469,8 +497,16 @@ const [currentJuryId, setCurrentJuryId] = useState('')
 
     const handleListing = () => {
         setIsListening(true);
-        let backSound = new Audio('https://firebasestorage.googleapis.com/v0/b/voicepoints-c0a52.appspot.com/o/sounds%2Fsimulation.mp3?alt=media&token=aaa4f88e-887b-41c6-8eb3-3c16d0a9b1e0')
-        backSound.play()
+
+        // let backSound = new Audio('https://firebasestorage.googleapis.com/v0/b/voicepoints-c0a52.appspot.com/o/sounds%2Fsimulation.mp3?alt=media&token=aaa4f88e-887b-41c6-8eb3-3c16d0a9b1e0')
+
+       if (backgroundSound) {
+           console.log("sound_________",backgroundSound);
+           backgroundSound.pause()
+       }
+
+      backgroundSound.play()
+        // backSound.play()
         microphoneRef.current.classList.add("listening");
         SpeechRecognition.startListening({
             continuous: true,
@@ -498,6 +534,18 @@ const [currentJuryId, setCurrentJuryId] = useState('')
         })
 }
 
+
+function showTopThree(){
+     if (winingSong) {
+         winingSong.pause()
+     }
+    winingSong.play()
+    setShowTopThreeValue(true)
+}
+function viewMainTable() {
+
+    setShowTopThreeValue(false)
+}
 
 function findLastItemIndex(arr,property, value, ownIndex) {
      let index = -1
@@ -613,9 +661,12 @@ function findLastItemIndex(arr,property, value, ownIndex) {
 
         console.log("params===", countryName, points, type, pgroup);
         let pointsPositionsCopy = [...pgroup]
-let sound = new Audio('https://firebasestorage.googleapis.com/v0/b/voicepoints-c0a52.appspot.com/o/sounds%2Fpoints_go.wav?alt=media&token=97a912fc-69d2-4b85-9e7b-50094f0f404e')
-        sound.play();
-        console.log("sound===",sound);
+// let sound = new Audio('https://firebasestorage.googleapis.com/v0/b/voicepoints-c0a52.appspot.com/o/sounds%2Fpoints_go.wav?alt=media&token=97a912fc-69d2-4b85-9e7b-50094f0f404e')
+
+      pointGoSound.play()
+
+        // sound.play();
+        console.log("sound===",pointGoSound);
 
         let board = document.getElementById('board').getBoundingClientRect()
         console.log("board========",board);
@@ -888,27 +939,47 @@ console.log("end ----- goTo")
 
 
     function initPoints(nameFull = '', isFirst = false) {
-let number = currentJuryNumber
 
-     let trSound = new Audio( 'https://firebasestorage.googleapis.com/v0/b/voicepoints-c0a52.appspot.com/o/sounds%2FnewJury.mp3?alt=media&token=018dd29d-2334-4862-86b0-7734d3ac3be8')
-        trSound.play()
+
+
+        let number = currentJuryNumber+1
+
+
+
         let  allJuriesData = [...allJuries]
         let currentJuryIdData = currentJuryId
-
+        console.log("N______", number,allJuriesData.length )
         console.log("currentJury Data",currentJuryIdData);
 
         if (allJuriesData.length === 0) {
 
             return
         }
+if (number > allJuriesData.length) {
+    return
+}
 
-     if (currentJuryIdData) {
+
+
+
+        let trSound = new Audio( 'https://firebasestorage.googleapis.com/v0/b/voicepoints-c0a52.appspot.com/o/sounds%2FnewJury.mp3?alt=media&token=018dd29d-2334-4862-86b0-7734d3ac3be8')
+
+
+        trSound.play()
+
+
+
+
+        if (currentJuryIdData) {
          let itemJuryIndex = allJuriesData.findIndex(jury => jury.time == currentJuryIdData)
+
+
+
          console.log("?????????",itemJuryIndex,currentJuryIdData);
 
 
          if (itemJuryIndex !== -1  && allJuriesData.length-1 === itemJuryIndex) {
-             setCurrentJuryNumber(number+1)
+             setCurrentJuryNumber(number)
             console.log("LAST -----")
             setPointsPositions(pointsPositionsOriginal)
             localStorage.removeItem('juryTimeId')
@@ -924,7 +995,7 @@ let number = currentJuryNumber
 
        if (currentJuryIdData) {
            let nextJuryIndex = allJuriesData.findIndex(j => j.time == currentJuryIdData)
-           setCurrentJuryNumber(number+1)
+           setCurrentJuryNumber(number)
            console.log("current jury item",currentJuryId);
            console.log("next jury index =",nextJuryIndex, allJuriesData);
            if (nextJuryIndex !== -1  && (nextJuryIndex+1) < allJuriesData.length){
@@ -943,7 +1014,7 @@ let number = currentJuryNumber
             },100)
             setTimeout(()=>{
                 setShowJuryName(false)
-            },4200)
+            },6200)
         }
 
 
@@ -962,11 +1033,63 @@ let number = currentJuryNumber
     return (
         <div className={'main-page-voting'}>
 
-            {showJuryName && <div className={'next-jury'}>Jury is {showJuryName}</div>}
+            {showJuryName && <div className={'next-jury '}>
+                <div className={''}>
+                    <span> Jury is </span>
+                    <span className={'next-jury-name'}>{showJuryName} </span></div>
+            </div>
+            }
+
+
+            {showTopThreeValue && <div className={'top-three-all position-relative'}>
+<div className={'close-btn cursor-pointer'} onClick={viewMainTable}>View All</div>
+                <div className={"country-top-three-all-title"}> TOP 5</div>
+                <div className="country-top-three-all">
+                      {sortedCountrties.map((c,i) => {
+                          if (i<=4) {
+                              return <>
+                                  <div
+                                      className={"country-top-three"} id={c.name} key={c.name}>
+                                      <div className={"country-top-three-content d-flex align-items-center justify-content-between"}>
+                                          <div className={"country-top-three-content-left d-flex align-items-center"}>
+                                              <div className={'flag mr-3'}>
+                                                  <img src={c.icon} alt=""/>
+                                              </div>
+                                              <div className={'mr-2 cnt'}>
+                                                  {c.name}
+                                              </div>
+                                          </div>
+
+                                          <div className={'mr-5 '}>
+                                              {c.points}
+                                          </div>
+                                      </div>
+
+                                  </div>
+                              </>
+                          }
+
+                      })}
+                  </div>
+
+
+              </div>
+            }
+
+
+
+
+
+
             <div className={'main-page-voting-templete position-relative'}>
                 <GalaxyCanvas> </GalaxyCanvas>
 <div  className={'ml-4'}      ref={microphoneRef}
      onClick={handleListing} style={{color:"white"}}>#voicePoints</div>
+
+
+                <div  className={' mt-2 ml-4'}
+                      onClick={showTopThree} style={{color:"white"}}>#top5</div>
+
 
                 <div className={"board mx-auto"} id={"board"}>
                     <div className={'d-flex ml-4 justify-content-between'} >

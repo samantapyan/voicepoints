@@ -2,22 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="66bd13ee-5ca0-4dde-8d99-c954258b42e6" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/pages/AdminPanel/AdminPanel.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/AdminPanel/style.scss" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/sounds/simulation.mp3" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/App.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/HeaderApp/HeaderApp.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/HeaderApp/HeaderApp.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/Home/Home.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Home/Home.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/Home/style.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Home/style.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/Registration/Registration.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Registration/Registration.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/RegistrationJury/RegistrationJury.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/RegistrationJury/RegistrationJury.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/RegistrationJury/style.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/RegistrationJury/style.scss" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/VotingTable/VotingTable.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/VotingTable/VotingTable.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/VotingTable/style.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/VotingTable/style.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/routes.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/routes.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/services/firebase.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/firebase.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/sounds/points_go.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/sounds/simulation.mp3" beforeDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/node_modules/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -28,11 +18,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/pages/Home/Home.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="212">
-              <caret line="21" column="26" selection-start-line="21" selection-start-column="26" selection-end-line="21" selection-end-column="26" />
+            <state relative-caret-position="301">
+              <caret line="53" column="22" lean-forward="true" selection-start-line="53" selection-start-column="22" selection-end-line="53" selection-end-column="22" />
               <folding>
                 <element signature="e#0#56#0" expanded="true" />
               </folding>
@@ -40,23 +30,15 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/pages/VotingTable/VotingTable.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="334">
-              <caret line="977" column="43" lean-forward="true" selection-start-line="977" selection-start-column="43" selection-end-line="977" selection-end-column="43" />
+            <state relative-caret-position="132">
+              <caret line="535" lean-forward="true" selection-start-line="535" selection-end-line="535" />
               <folding>
                 <element signature="e#0#48#0" expanded="true" />
+                <element signature="e#248#299#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/App.css">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="216">
-              <caret line="12" column="48" lean-forward="true" selection-start-line="12" selection-start-column="48" selection-end-line="12" selection-end-column="48" />
             </state>
           </provider>
         </entry>
@@ -85,7 +67,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/pages/RegistrationJury/RegistrationJury.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="880">
+            <state relative-caret-position="547">
               <caret line="133" column="36" selection-start-line="133" selection-start-column="36" selection-end-line="133" selection-end-column="36" />
               <folding>
                 <element signature="e#0#48#0" expanded="true" />
@@ -97,16 +79,21 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/pages/VotingTable/style.scss">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="94">
-              <caret line="75" lean-forward="true" selection-start-line="75" selection-end-line="75" />
+            <state relative-caret-position="-49">
+              <caret line="265" column="18" selection-start-line="265" selection-start-column="18" selection-end-line="265" selection-end-column="18" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/media/backgrounds/points-back.svg">
+          <provider selected="true" editor-type-id="images" />
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/pages/RegistrationJury/style.scss">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="344">
+            <state relative-caret-position="414">
               <caret line="23" column="11" selection-start-line="23" selection-start-column="11" selection-end-line="23" selection-end-column="11" />
             </state>
           </provider>
@@ -115,7 +102,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/routes.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="300">
+            <state relative-caret-position="576">
               <caret line="37" column="15" selection-start-line="37" selection-start-column="15" selection-end-line="37" selection-end-column="15" />
               <folding>
                 <element signature="e#0#39#0" expanded="true" />
@@ -127,7 +114,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/pages/HeaderApp/HeaderApp.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="108">
+            <state relative-caret-position="270">
               <caret line="20" column="31" selection-start-line="20" selection-start-column="31" selection-end-line="20" selection-end-column="31" />
               <folding>
                 <element signature="e#0#56#0" expanded="true" />
@@ -140,36 +127,36 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>goTo</find>
-      <find>pointsPositionsCopy</find>
-      <find>Jury Registration</find>
-      <find>-webkit-linear-gradient(left, #341d42, #181571)</find>
-      <find>Log out</find>
-      <find>Simulation Page</find>
-      <find>Login Form</find>
-      <find>useHistory</find>
-      <find>home-banner-voice</find>
-      <find>50px</find>
-      <find>hist</find>
-      <find>storeCountryData</find>
-      <find>initAll</find>
-      <find>startVoting</find>
-      <find>linear-gradient(-45deg, #06013e, #05112f, #0c0079, #0a0063, #5d0569, #b300bd)</find>
-      <find>INIT ALL</find>
-      <find>#voicePoints</find>
-      <find>board</find>
-      <find>handleListing</find>
-      <find>transitionSound</find>
-      <find>9000</find>
-      <find>min-he</find>
-      <find>init</find>
-      <find>setT</find>
-      <find>setTime</find>
-      <find>jury</find>
       <find>allJuries</find>
       <find>setTimeout</find>
-      <find>setCurrentJuryNumber</find>
       <find>currentJuryNumber</find>
+      <find>points_go.wav</find>
+      <find>backSound</find>
+      <find>setPointGo</find>
+      <find>setPointGoSound</find>
+      <find>setBackgroundSound</find>
+      <find>pointpointGoSound</find>
+      <find>init</find>
+      <find>settim</find>
+      <find>setTim</find>
+      <find>play()</find>
+      <find>new Audio</find>
+      <find>showJuryName</find>
+      <find>setTime</find>
+      <find>number</find>
+      <find>setCurrentJuryNumber</find>
+      <find>#voice</find>
+      <find>setShowTop</find>
+      <find>showTop</find>
+      <find>viewMainTable</find>
+      <find>topThree</find>
+      <find>view</find>
+      <find>next-jury</find>
+      <find>pointsPositions</find>
+      <find>base-size</find>
+      <find>new A</find>
+      <find>setWiningSong</find>
+      <find>audio</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -213,16 +200,17 @@
         <option value="$PROJECT_DIR$/src/App.js" />
         <option value="$PROJECT_DIR$/src/pages/Registration/Registration.js" />
         <option value="$PROJECT_DIR$/src/pages/Home/style.scss" />
-        <option value="$PROJECT_DIR$/src/pages/Home/Home.js" />
-        <option value="$PROJECT_DIR$/src/pages/VotingTable/style.scss" />
         <option value="$PROJECT_DIR$/src/App.css" />
+        <option value="$PROJECT_DIR$/src/pages/VotingTable/style.scss" />
         <option value="$PROJECT_DIR$/src/pages/VotingTable/VotingTable.js" />
+        <option value="$PROJECT_DIR$/src/pages/Home/Home.js" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="1">
-    <option name="x" value="16" />
-    <option name="width" value="1483" />
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="282" />
+    <option name="y" value="79" />
+    <option name="width" value="1166" />
     <option name="height" value="867" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -253,7 +241,20 @@
               <item name="voicepoints" type="b2602c69:ProjectViewProjectNode" />
               <item name="voicepoints" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="hooks" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="voicepoints" type="b2602c69:ProjectViewProjectNode" />
+              <item name="voicepoints" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="media" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="voicepoints" type="b2602c69:ProjectViewProjectNode" />
+              <item name="voicepoints" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="media" type="462c0819:PsiDirectoryNode" />
+              <item name="backgrounds" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="voicepoints" type="b2602c69:ProjectViewProjectNode" />
@@ -337,12 +338,6 @@
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="services" type="462c0819:PsiDirectoryNode" />
             </path>
-            <path>
-              <item name="voicepoints" type="b2602c69:ProjectViewProjectNode" />
-              <item name="voicepoints" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="sounds" type="462c0819:PsiDirectoryNode" />
-            </path>
           </expand>
           <select />
         </subPane>
@@ -416,18 +411,19 @@
       <workItem from="1639591166698" duration="4096000" />
       <workItem from="1639679307063" duration="15237000" />
       <workItem from="1639761178072" duration="17234000" />
-      <workItem from="1639837561191" duration="21518000" />
+      <workItem from="1639837561191" duration="21769000" />
+      <workItem from="1639895870708" duration="10259000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="208121000" />
+    <option name="totallyTimeSpent" value="218631000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="16" y="0" width="1483" height="867" extended-state="0" />
+    <frame x="-8" y="-8" width="1616" height="876" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.23541813" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.19987147" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -440,7 +436,7 @@
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" order="8" />
       <window_info anchor="bottom" id="Version Control" order="9" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="10" sideWeight="0.888691" visible="true" weight="0.083333336" />
+      <window_info anchor="bottom" id="Terminal" order="10" sideWeight="0.888691" visible="true" weight="0.13528591" />
       <window_info anchor="bottom" id="Event Log" order="11" sideWeight="0.11130899" side_tool="true" weight="0.09180791" />
       <window_info anchor="bottom" id="TypeScript" order="12" />
       <window_info anchor="bottom" id="Messages" order="13" />
@@ -481,7 +477,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/pages/Home/Home.js</url>
-          <line>97</line>
+          <line>101</line>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
@@ -602,9 +598,6 @@
     <entry file="file://$PROJECT_DIR$/src/media/backgrounds/voice.svg">
       <provider selected="true" editor-type-id="images" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/media/backgrounds/points-back.svg">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/media/backgrounds/host.png">
       <provider selected="true" editor-type-id="images" />
     </entry>
@@ -713,9 +706,23 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/App.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="216">
+          <caret line="12" column="48" selection-start-line="12" selection-start-column="48" selection-end-line="12" selection-end-column="48" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/pages/RegistrationJury/style.scss">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="414">
+          <caret line="23" column="11" selection-start-line="23" selection-start-column="11" selection-end-line="23" selection-end-column="11" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/routes.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="300">
+        <state relative-caret-position="576">
           <caret line="37" column="15" selection-start-line="37" selection-start-column="15" selection-end-line="37" selection-end-column="15" />
           <folding>
             <element signature="e#0#39#0" expanded="true" />
@@ -723,22 +730,18 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/pages/RegistrationJury/style.scss">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="344">
-          <caret line="23" column="11" selection-start-line="23" selection-start-column="11" selection-end-line="23" selection-end-column="11" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/pages/HeaderApp/HeaderApp.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="108">
+        <state relative-caret-position="270">
           <caret line="20" column="31" selection-start-line="20" selection-start-column="31" selection-end-line="20" selection-end-column="31" />
           <folding>
             <element signature="e#0#56#0" expanded="true" />
           </folding>
         </state>
       </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/media/backgrounds/points-back.svg">
+      <provider selected="true" editor-type-id="images" />
     </entry>
     <entry file="file://$PROJECT_DIR$/src/pages/Registration/Registration.js">
       <provider selected="true" editor-type-id="text-editor">
@@ -750,27 +753,13 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/pages/Home/Home.js">
+    <entry file="file://$PROJECT_DIR$/src/pages/RegistrationJury/RegistrationJury.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="212">
-          <caret line="21" column="26" selection-start-line="21" selection-start-column="26" selection-end-line="21" selection-end-column="26" />
+        <state relative-caret-position="547">
+          <caret line="133" column="36" selection-start-line="133" selection-start-column="36" selection-end-line="133" selection-end-column="36" />
           <folding>
-            <element signature="e#0#56#0" expanded="true" />
+            <element signature="e#0#48#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/pages/VotingTable/style.scss">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="94">
-          <caret line="75" lean-forward="true" selection-start-line="75" selection-end-line="75" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/App.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="216">
-          <caret line="12" column="48" lean-forward="true" selection-start-line="12" selection-start-column="48" selection-end-line="12" selection-end-column="48" />
         </state>
       </provider>
     </entry>
@@ -781,22 +770,30 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/pages/RegistrationJury/RegistrationJury.js">
+    <entry file="file://$PROJECT_DIR$/src/pages/VotingTable/style.scss">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="880">
-          <caret line="133" column="36" selection-start-line="133" selection-start-column="36" selection-end-line="133" selection-end-column="36" />
-          <folding>
-            <element signature="e#0#48#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="-49">
+          <caret line="265" column="18" selection-start-line="265" selection-start-column="18" selection-end-line="265" selection-end-column="18" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/pages/VotingTable/VotingTable.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="334">
-          <caret line="977" column="43" lean-forward="true" selection-start-line="977" selection-start-column="43" selection-end-line="977" selection-end-column="43" />
+        <state relative-caret-position="132">
+          <caret line="535" lean-forward="true" selection-start-line="535" selection-end-line="535" />
           <folding>
             <element signature="e#0#48#0" expanded="true" />
+            <element signature="e#248#299#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/pages/Home/Home.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="301">
+          <caret line="53" column="22" lean-forward="true" selection-start-line="53" selection-start-column="22" selection-end-line="53" selection-end-column="22" />
+          <folding>
+            <element signature="e#0#56#0" expanded="true" />
           </folding>
         </state>
       </provider>

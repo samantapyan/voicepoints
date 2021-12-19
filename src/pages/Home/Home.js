@@ -30,13 +30,17 @@ useEffect(()=>{
         all.map(data => {
             firebase.storeCountryData({...data, points:0, position: {top:0, left:0}},()=>{})
         })
+        localStorage.removeItem('juryTimeId')
 
     }
 
     return (
         <div className="App">
             <HeaderApp/>
-
+            <iframe width="100%" height="315" src="https://www.youtube.com/embed/FO5KlT3ivVs"
+                    title="YouTube video player" frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen></iframe>
             <div className={'home-banner-1'}>
                 <Container>
                     <span className={'home-banner-1-main-word font-weight-bold pr-4'}>Voice</span>
