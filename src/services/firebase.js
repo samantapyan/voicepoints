@@ -71,6 +71,7 @@ class FirebaseService {
                 callback(true)
             })
     }
+
     getAllJuries = (callback) =>{
         let result = []
         this.db

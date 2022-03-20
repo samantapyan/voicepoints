@@ -3,7 +3,7 @@ import './style.scss';
 import {Link} from "react-router-dom";
 import * as ReactBootstrap from 'react-bootstrap'
 import {useDispatch, useSelector} from "react-redux";
-import svgLogout from './../../media/icons/logout.svg'
+// import svgLogout from './../../media/icons/logout.svg'
 
 
 // import {Link} from 'react-router-dom'

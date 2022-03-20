@@ -1,14 +1,14 @@
 import './App.css';
 import {BrowserRouter as Router, Route, Routes} from "react-router-dom";
-import Home from './pages/Home/Home'
+import Home from './components/pages/Home/Home'
 import routes from './routes'
-import VotingTable from "./pages/VotingTable/VotingTable";
-import Registration from "./pages/Registration/Registration";
+import VotingTable from "./components/pages/VotingTable/VotingTable";
+import Registration from "./components/pages/Registration/Registration";
 import { setUser } from "./store/slices/UserSlice.js";
 import firebase from "./services/firebase"
 import {useDispatch, useSelector} from "react-redux";
 // import HeaderApp from './pages/HeaderApp/HeaderApp'
-import FooterApp from './pages/FooterApp/FooterApp'
+import FooterApp from './components/pages/FooterApp/FooterApp'
 
 import React, {useEffect, useState} from 'react'
 

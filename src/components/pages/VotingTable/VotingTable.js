@@ -4,10 +4,10 @@ import {useEffect, useState, useRef} from "react";
 // import transitionSound from './../../sounds/points_go.wav'
 // import backgroundSound from './../../sounds/simulation.mp3'
 
-import nextIcon from './../../media/icons/next.png'
+import nextIcon from './../../../media/icons/next.png'
 import {Row} from 'react-bootstrap'
-import firebase from "./../../services/firebase"
-import pointBack from "./../../media/backgrounds/points-back.svg"
+import firebase from "./../../../services/firebase"
+import pointBack from "./../../../media/backgrounds/points-back.svg"
 import * as speech from "@tensorflow-models/speech-commands";
 import React from "react";
 import SpeechRecognition, { useSpeechRecognition } from "react-speech-recognition";

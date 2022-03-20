@@ -3,7 +3,7 @@ import './style.scss';
 import {Link} from "react-router-dom";
 import * as ReactBootstrap from 'react-bootstrap'
 import {useDispatch, useSelector} from "react-redux";
-import svgLogout from './../../media/icons/logout.svg'
+import svgLogout from './../../../media/icons/logout.svg'
 
 
 // import {Link} from 'react-router-dom'
@@ -17,11 +17,10 @@ const HeaderApp = () => {
 
     return (
         <div className="header-app">
-                <Row className="header-app-content  mr-0 ml-0 justify-content-end" xs={2} md={4} lg={6} >
-                    <Col></Col>
-                    <Col></Col>
-                    <Col className={'text-right mr-3'}>
-                        <div>
+                <Row className="header-app-content  mr-0 ml-0 justify-content-end" xs={1} sm={3} md={3} lg={2} >
+
+                    <Col xl={4} lg={4} sm={5} className={'text-right mr-3'}>
+                        <div className={'text-end'}>
                             {activeUser?.email || ""}
                         </div>
 

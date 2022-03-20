@@ -5,10 +5,14 @@ import * as ReactBootstrap from 'react-bootstrap'
 import RegistrationJury from "./../RegistrationJury/RegistrationJury"
 import {useDispatch, useSelector} from "react-redux";
 import { Button } from 'react-bootstrap';
-import voice from './../../media/backgrounds/voice.svg'
-import host from './../../media/backgrounds/host.png'
+import voice from './../../../media/backgrounds/voice.svg'
+import host from './../../../media/backgrounds/host.png'
 import HeaderApp from "../HeaderApp/HeaderApp";
-import firebase from "../../services/firebase";
+import firebase from "../../../services/firebase";
+
+
+
+
 
 // import {Link} from 'react-router-dom'
 const Row = ReactBootstrap.Row;
@@ -43,8 +47,13 @@ useEffect(()=>{
                     allowFullScreen></iframe>
             <div className={'home-banner-1'}>
                 <Container>
-                    <span className={'home-banner-1-main-word font-weight-bold pr-4'}>Voice</span>
-                    <span className={'home-banner-1-text'}>points</span>
+                    <div>
+                        <span className={'home-banner-1-main-word font-weight-bold pr-4'}>Voice</span>
+                        <span className={'home-banner-1-text'}>points</span>
+                    </div>
+                    <div className={'text-center'}>
+                        <Link to={'registration'} className={'fst-normal text-decoration-none'}>Go To Reg Page </Link>
+                    </div>
                 </Container>
             </div>
             <div className={'home-banner-add'}>

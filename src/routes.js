@@ -1,9 +1,9 @@
-import Home from "./pages/Home/Home.js"
-import VotingTable from "./pages/VotingTable/VotingTable.js"
-import Registration from "./pages/Registration/Registration";
-import PageNotFound from "./pages/PageNotFound/Pagenotfound";
-import GalaxyThree from "./pages/GalaxyThree/GalaxyThree";
-import AdminPanel from "./pages/AdminPanel/AdminPanel";
+import Home from "./components/pages/Home/Home.js"
+import VotingTable from "./components/pages/VotingTable/VotingTable.js"
+import Registration from "./components/pages/Registration/Registration";
+import PageNotFound from "./components/pages/PageNotFound/Pagenotfound";
+import GalaxyThree from "./components/pages/GalaxyThree/GalaxyThree";
+import AdminPanel from "./components/pages/AdminPanel/AdminPanel";
 
 const routes = [
 
